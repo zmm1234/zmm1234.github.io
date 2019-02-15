@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>利用Hexo+Github搭建个人免费博客 | Submarine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言本篇blog将记录个人静态博客的搭建方法：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法  GitHub静态博客是什么，为什么选择Hexo？GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免费的托">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用Hexo+Github搭建个人免费博客">
+<meta property="og:url" content="http://yoursite.com/2019/02/15/tutoial-of-hexo/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="前言本篇blog将记录个人静态博客的搭建方法：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法  GitHub静态博客是什么，为什么选择Hexo？GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免费的托">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-15T13:00:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用Hexo+Github搭建个人免费博客">
+<meta name="twitter:description" content="前言本篇blog将记录个人静态博客的搭建方法：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法  GitHub静态博客是什么，为什么选择Hexo？GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免费的托">
+  
+    <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Submarine</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">chinese submarine</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-tutoial-of-hexo" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/02/15/tutoial-of-hexo/" class="article-date">
+  <time datetime="2019-02-15T06:41:24.000Z" itemprop="datePublished">2019-02-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      利用Hexo+Github搭建个人免费博客
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本篇blog将记录个人静态博客的搭建方法：</p>
+<ul>
+<li>Github静态博客是什么，为什么选择Hexo？</li>
+<li>Hexo搭建过程</li>
+<li>Hexo使用方法</li>
+</ul>
+<h1 id="GitHub静态博客是什么，为什么选择Hexo？"><a href="#GitHub静态博客是什么，为什么选择Hexo？" class="headerlink" title="GitHub静态博客是什么，为什么选择Hexo？"></a>GitHub静态博客是什么，为什么选择Hexo？</h1><p>GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免费的托管空间可以用来存放静态博客站点的数据，使用GitHub Pages技术搭建静态博客站点的好处有：</p>
+<ul>
+<li>多达1G的免费空间。</li>
+<li>每月100GB的流量。</li>
+<li>利用GitHub的数据存储备份功能，保证数据的安全。</li>
+</ul>
+<p>具体的介绍可以参考<a href="https://help.github.com/articles/what-is-github-pages/" target="_blank" rel="noopener">GitHub Pages</a>.</p>
+<p>在<a href="https://help.github.com/articles/what-is-github-pages/" target="_blank" rel="noopener">Hexo</a>之前GitHub内置支持的静态网页生成引擎是Jekyll，参考<a href="https://www.jianshu.com/p/b0cae7168352" target="_blank" rel="noopener">三脚猫</a>相比较Jekyll而言，Hexo更容易入手，也更方便配置，顾本人更倾向于使用Hexo。另外Hexo也支持多线备份，可以同步到多个git仓库中，实现境内境外双线解析镜像，不过该功能还未体验。</p>
+<h1 id="Hexo搭建过程"><a href="#Hexo搭建过程" class="headerlink" title="Hexo搭建过程"></a>Hexo搭建过程</h1><p>本人是mac系统，参考<a href="https://www.jianshu.com/p/e99ed60390a8" target="_blank" rel="noopener">全民博客时代的到来——20分钟简要教程</a>,一步一步下来，将下列工具准备齐全：</p>
+<ul>
+<li>git</li>
+<li>npm</li>
+<li>hexo</li>
+</ul>
+<p>在部署hexo过程中可能会遇到一些错误，根据npm提示或者google一些基本就可以解决了。</p>
+<p>关于Hexo源代码的保存问题，可以参考<a href="https://www.jianshu.com/p/3c827e38a852" target="_blank" rel="noopener">保存Hexo博客源码到Github上</a>，创建一个新的分支，将代码存入新的分支中，保留master给GitHub Pages引擎用作渲染用。<br>在实际操作中，该文章中的一些git方法可以根据实际情况进行调整，这里需要掌握一些git的基本语法。</p>
+<h1 id="Hexo使用方法"><a href="#Hexo使用方法" class="headerlink" title="Hexo使用方法"></a>Hexo使用方法</h1>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/02/15/tutoial-of-hexo/" data-id="cjs629tpa0000i1zs7lrnd1wh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/02/15/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/15/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 三闻鱼<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
