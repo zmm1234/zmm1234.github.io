@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Beating the Average------为什么要学习Lisp[转] | Submarine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="出类拔萃 by Paul Graham April 2001, rev. April 2003 （这篇文章改自2001年给Franz开发者论坛的演讲） 1995年夏天，我和我的朋友Robert Morris创办了一个公司叫Viaweb.&amp;nbsp;我们的计划是写一个在线商店的建站软件。当时这个软件的新颖之处是它在我们的服务器端运行，用网页作为用户界面。 当然，很多人当年也有同样的想法，但就我所知，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Beating the Average------为什么要学习Lisp[转]">
+<meta property="og:url" content="http://yoursite.com/2010/12/13/Beating-the-Average-为什么要学习Lisp-转/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="出类拔萃 by Paul Graham April 2001, rev. April 2003 （这篇文章改自2001年给Franz开发者论坛的演讲） 1995年夏天，我和我的朋友Robert Morris创办了一个公司叫Viaweb.&amp;nbsp;我们的计划是写一个在线商店的建站软件。当时这个软件的新颖之处是它在我们的服务器端运行，用网页作为用户界面。 当然，很多人当年也有同样的想法，但就我所知，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-16T13:03:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Beating the Average------为什么要学习Lisp[转]">
+<meta name="twitter:description" content="出类拔萃 by Paul Graham April 2001, rev. April 2003 （这篇文章改自2001年给Franz开发者论坛的演讲） 1995年夏天，我和我的朋友Robert Morris创办了一个公司叫Viaweb.&amp;nbsp;我们的计划是写一个在线商店的建站软件。当时这个软件的新颖之处是它在我们的服务器端运行，用网页作为用户界面。 当然，很多人当年也有同样的想法，但就我所知，">
+  
+    <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Submarine</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">chinese submarine</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Beating-the-Average-为什么要学习Lisp-转" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/12/13/Beating-the-Average-为什么要学习Lisp-转/" class="article-date">
+  <time datetime="2010-12-13T10:29:00.000Z" itemprop="datePublished">2010-12-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Beating the Average------为什么要学习Lisp[转]
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><span><span>出类拔萃</span></span></p>
+<p>by Paul Graham</p>
+<p>April 2001, rev. April 2003</p>
+<p>（这篇文章改自<span>2001</span>年给<span>Franz</span>开发者论坛的演讲）</p>
+<p><span>1995</span>年夏天，我和我的朋友<span>Robert Morris</span>创办了一个公司叫<span>Viaweb.&nbsp;</span>我们的计划是写一个在线商店的建站软件。当时这个软件的新颖之处是它在我们的服务器端运行，用网页作为用户界面。</p>
+<p>当然，很多人当年也有同样的想法，但就我所知，<span>Viaweb</span>是第一款基于<span>web</span>的应用。我们很喜欢这个新想法，并以此为公司命名：<span>Viaweb</span>，因为我们的软件不是桌面软件而是通过网络来运行的。</p>
+<p>关于这个软件，另一件特别之处就是它主要用<span>Lisp</span>写就。它是面向大众用户的<span>Lisp</span>程序的先锋，在此之前<span>Lisp</span>几乎都是用在大学和实验室的象牙塔里。<span>[1]</span></p>
+<p><strong><span>The Secret Weapon</span></strong></p>
+<p><span>秘密武器</span></p>
+<p><span>Eric Raymond</span>写过一篇文章<span>&ldquo;</span>如何成为黑客<span>&rdquo;</span>，文中他教导黑客学前班的同学如何选择语言。他建议以<span>Python</span>和<span>Java</span>起步－因为容易学。严肃的黑客要修改<span>Unix</span>就得学<span>C</span>语言。最后，真正严肃的黑客应该考虑学习<span>Lisp:</span></p>
+<p><span>&nbsp;&ldquo;</span>悟道时那种深刻的醍醐灌顶的感受是<span>Lisp</span>值得学习的一个原因；这个体验会让你在后面的岁月里成为更好的程序员－即使你<span>&nbsp;&nbsp;</span>不常用<span>Lisp</span>写程序。<span>&rdquo;</span></p>
+<p>这和常听到的学习拉丁语的论调很类似。学了不会帮你找到工作（语言学教授除外），但它会训练提高你的大脑，让你在用诸如英语之类的语言写作时能够得心应手。</p>
+<p>但是，等一下。这个比喻并不普遍适用。学习拉丁语找不着工作是因为没人说拉丁语。如果你用拉丁语写作，没人能理解你。但是<span>Lisp</span>是计算机语言，计算机可不挑剔程序员用什么语言。</p>
+<p>如果像他说的，<span>Lisp</span>能让你成为更好的程序员，为啥不用呢？如果一个画家弄了一杆能让他下笔犹如神的画笔，在我看来，他画啥画都想用的，不是吗？我不是要取笑<span>Eric Raymond</span>。总的来讲，他的建议很好。他关于<span>Lisp</span>的说法基本是传统观点。但是这个传统观点自相矛盾：<span>Lisp</span>会让你成为更好的程序员，但你不会去用它。</p>
+<p>为什么不呢？毕竟编程语言只是工具。如果<span>Lisp</span>写的程序更好的话，你就应该用它。如果用它写得烂，那谁还稀罕呢？</p>
+<p>这不只是理论上的问题。软件行业竞争残酷－优胜劣汰。其他条件相同，软件写的又快又好公司会把对手挤垮。当你开始创业时，会对这一点深有体会。创业公司常处于要么盆满钵满要么一穷二白的位置。你最终要么赚翻，要么潦倒。如果你对技术押错宝了，竞争对手就会来灭掉你。</p>
+<p><span>Robert</span>和我都精于<span>Lisp</span>，我们没有理由不相信自己的直觉而弃用<span>Lisp.&nbsp;</span>我们知道其他人都在用<span>C++</span>和<span>Perl</span>写软件。我们也知道这没啥大不了的。如果你选择那样的技术，就要在<span>Windows</span>上跑。选择技术时，必须忽略其他人在用什么，只考虑什么能工作得最好。</p>
+<p>这在创业公司里更为适用。大公司里，你可以像其他所有大公司一样做事。但是创业公司里，你不能亦步亦趋。我不认为很多人意识到这一点了（即使是创业公司里的家伙们）。</p>
+<p>大公司每年平均增长<span>10%</span>。所以你要是掌管一个大公司的话，你按照大公司的通用做事方式，你也就种瓜得瓜，种豆得豆－得到<span>10%</span>的增长。</p>
+<p>创业公司里的情况也一样。如果你按照大多数创业公司的方式去做事，你也就只能期望业绩达到平均水平。这里的问题在于，平均水平意味着你要关门大吉。创业公司的成活率是大大低于<span>50%</span>的。所以，如果你开公司，最好有点与众不同。否则，麻烦就大了。</p>
+<p><span>1995</span>年那会，我们知道一个竞争者尚未参透的秘密（现在也有好多蒙在鼓里呢）：如果你的软件在服务器端运行，就可以用任何你想用的语言。要是写桌面应用，很强势的一个观点就是要用操作系统的语言写应用。十年前，写应用这意味着用<span>C</span>语言写。但是，对于基于<span>Web</span>的软件，而你又有语言和操作系统的源码时，你可以用任何想用的语言。</p>
+<p>然而，语言选择的自由是把双刃剑。现在你可以选了，你得思考选哪一个。那些拒绝变化的鸵鸟公司危险了：它们的对手可没有把头埋进沙子。</p>
+<p>你会选哪个语言呢？我们选择<span>Lisp.&nbsp;</span>很重要的一点就是，这个市场上快速开发很重要。我们都白手起家，一个公司要是能比对手更早的做完新特性就很有优势。我们知道<span>Lisp</span>用于快速开发相当合适，而基于服务器的应用会放大这个优势－因为软件写完就可以立即发布。</p>
+<p>如果其他公司不想用<span>Lisp,&nbsp;</span>真好。这在技术上会让我们有一个优势，能帮上忙的来者不拒。当我们创立<span>Viaweb</span>时，我们没有商业经验，不懂得市场推广，招聘员工，融资或者吸引用户。我们几个甚至都没工作过。我们唯一玩的转的就是写软件。我们寄希望于此。软件开发方面的任何优势，我们都不会放过。</p>
+<p>你可以说采用<span>Lisp</span>是一个试验。我们的算盘是这样打的：如果我们用<span>Lisp</span>，我们功能会开发的比对手快，也可以做一些他们做不到的事情。<span>Lisp</span>很高层，我们就不需要大的开发组，我们的开销就很小。如果行得通，我们就能提供物美价廉的产品，还能盈利。最终，赢得所有用户，我们的对手则失掉用户最终关门。这就是我们当时希望的过程。</p>
+<p>试验的结果如何？居然行得通。我们最终遇见了很多竞争者，<span>20</span>～<span>30</span>个吧，但没有一个能和我们针尖对麦芒。我们服务器上跑着一个<span>&ldquo;</span>所见即所得<span>&rdquo;</span>的在线商店编辑器，用起来却和桌面应用没啥差别。我们的对手们用的是<span>CGI</span>脚本。功能上我们总能先他们一步。有时，绝望中的对手想增加几个我们没有的功能。但是<span>Lisp</span>的开发周期很快，我们可以在他们发布软文宣传的一两天之内就复制一个新功能。当记者们读到他们的公关稿然后打电话给我们来问时，我们也有这个功能了。</p>
+<p>我们的竞争对手也许觉得我们有什么秘密武器－能够读到他们脑子里的计划。实际上我们没有，比他们想的要简单。没人泄密他们的新功能，我们只是比任何人预期的开发速度更快而已。</p>
+<p>我九岁时看过一部<span>The Day of the Jackal,&nbsp;</span>由<span>Frederick Forsyth</span>执导<span>.&nbsp;</span>主角是个刺客，要去刺杀法国总统。他必须通过警察，上到一个公寓能够俯瞰总统的行车路线。他乔装成一个跛老头，警察根本没有注意到他。</p>
+<p>我们的秘密武器也差不多。我们用一个怪异的人工智能语言写软件，语法难看，充斥着括号。很多年以来，对<span>Lisp</span>的这种描述让我很不自在。现在，却成了我们的优势。商业上，拥有一项对手根本不懂的技术是无价的，正如战争一样，出其不意和厉兵秣马一样重要。</p>
+<p>嗯，我有点窘：开发<span>Viaweb</span>时，公开场合我对<span>Lisp</span>只字未提。我们不向媒体说，如果你在网站上搜，也就只能找到我简历里提到的两本书。这是有意为之。如果他们不知道或者不关心我们用什么开发，我也乐于保持现状。<span>[2]</span></p>
+<p>理解我们技术最好的是我们的客户。他们不关心<span>Viaweb</span>用什么写的，但是他们注意到软件跑得很好。几分钟就能建好一个漂亮的在线商店。然后，口碑就传开了，用户越来越多。<span>1997</span>年底时，我们有<span>500</span>个用户。六个月后，<span>Yahoo</span>买我们时，有了<span>1070</span>个用户。今天，成了<span>Yahoo Store</span>的<span>Viaweb</span>还统治着市场，是<span>Yahoo</span>产品线中很能盈利的一员。那些由<span>Viaweb</span>建成的商店成了<span>Yahoo Shopping</span>的基础。我<span>1999</span>年离开<span>Yahoo</span>，我不知道用户数量的具体数字，但是最近一次听到的是大约<span>20</span>，<span>000.</span></p>
+<p><strong><span>The Blub Paradox</span></strong></p>
+<p><strong><span>Blub</span></strong><span>困境</span></p>
+<p><span>Lisp</span>到底强在哪儿？如果<span>Lisp</span>真那么棒，为啥没人用呢？听起来文绉绉的问题，实际上答案很直接。<span>Lisp</span>很棒不是因为某些痴迷者才能看到的品质，而是因为它就是所有语言中最强大的。没有普及的原因是选择编程语言不仅仅是个技术问题，而且是思维习惯－再没有比思维习惯改变得更慢得东西了。当然，这两个答案都需要解释。</p>
+<p>我以一个不那么惊世骇俗的论断开始：编程语言的能力各有千秋。</p>
+<p>高级语言比机器语言强大－这是个不争的事实。如今大多数程序员都赞成<span>&rdquo;</span>通常不要用机器语言写程序<span>&ldquo;</span>的观点。相反，你应当用高级语言，然后用编译器把程序编成机器语言。这个想法已经为硬件设计所采纳：自<span>80</span>年代起，指令集就专为编译器设计而不那么考虑我们程序员了。</p>
+<p>人人都知道你的程序要是全用机器语言写就是个错误。但是另外一个原则却不为人熟知：如果你要从一堆语言里挑一个出来（其他条件都相同的情况下），要是不选择最强大的－这也是个错误。<span>[3]</span></p>
+<p>这个原则也有很多例外。如果你的程序要和另外一个用某种语言写的程序打交道，那么通常新程序采用同样的语言是个好选择。如果你的程序只是要干点简单的活，比如数据处理或者位操作之类的，你可以用稍微低级一点的语言，还能带来速度上的优势。如果你写一个试验原型，你最好找库函数能满足要求的随便什么语言。但是大体来讲，对于应用软件，你需要用最强大的（也不太慢的）语言，其他的选择都是错误－这一定程度上和用机器语言写程序是一码事。</p>
+<p>你知道机器语言很低级。但是，至少某种社会共识认为高级语言通常被认为是一样强大的。但事实并非如此。<span>&ldquo;</span>高级语言<span>&rdquo;</span>这个技术词汇实际上没有表明任何确定的东西。并没有一个位于机器语言和高级语言之间的分水岭。所有语言都位于一个由不同抽象能力构成的谱系<span>[4]</span>之中：从最强大的语言到机器语言，位置反映着语言本身的能力的差别。</p>
+<p>拿<span>Cobol</span>来说，它是个高级语言－因为它能被编译成机器语言。真有人会跳出来辩护说<span>Cobol</span>和<span>Python</span>一样强吗？它要比<span>Python</span>更接近机器语言。</p>
+<p>或者<span>Perl4</span>又如何呢？<span>Perl4</span>到<span>Perl5</span>之间，词法闭包被加进来了。大多数<span>Perl</span>黑客都同意<span>Perl5</span>比<span>Perl4</span>更强了。但是，一旦你同意这一点，你也就同意了一个高级语言比另一个更强大。直接的推论就是，除了特殊情况，你应当用最强大的语言。</p>
+<p>然而现实中这个想法很少能实现它的结论。过了一定的年龄，程序员很少再会主动的更换语言了。他们手上碰巧用起来的随便什么语言，都被奉为圭臬。</p>
+<p>程序员对于喜好的语言偏爱有加，不能自拔。我不打算伤任何人的感情，所以解释观点时，我用一个虚构的语言：<span>Blub</span>。<span>Blub</span>位于抽象谱系的中间，它不是最高级的语言，但也比<span>Cobol</span>和机器语言强。</p>
+<p>实际上，我们虚构的<span>Blub</span>程序员不会用机器码或者<span>Cobol</span>：当然他们不会去写机器码－那是编译器该干的事情。对于<span>Cobol</span>，他们纳闷那些人是怎么用这语言干活的－<span>&nbsp;Cobol</span>连<span>x</span>功能都没有（<span>x</span>是一个<span>Blub</span>的功能）。</p>
+<p>只要我们的<span>Blub</span>程序员朝下看，他就知道在朝下看－比<span>Blub</span>弱的语言一眼就能看出来，因为它们缺少一些<span>Blub</span>的功能。但是如果向上看，他不会意识到。他认为所看到的都是些怪异的语言。他也许会觉得看到的语言都和<span>Blub</span>差不多，只是花哨的东西太多。<span>Blub</span>对他就够好了－因为，他用<span>Blub</span>思考。</p>
+<p>当我们切换到使用更高级的语言的程序员的视角，我们会发现他朝下会看到<span>Blub</span>：你怎么能用<span>Blub</span>干活呢？它连<span>y</span>功能都没有哎。</p>
+<p>推理一下，只有理解最强大的语言的程序员才能一览众山，看到所有语言能力间的差别。（这也许就是<span>Eric Raymond</span>说<span>Lisp</span>能让你成为一个更好的程序员的意思。）你不能相信其他人的观点，因为<span>Blub</span>困境：他们对自己碰巧用上的语言很满意，因为这语言描绘了他们思考程序的方式。</p>
+<p>我从自己的经验里知道这一点，高中时我用<span>Basic</span>写程序。这语言甚至都不支持递归。现在难以想象写程序不用递归。可那时，我可不稀罕。我用<span>Basic</span>思考，我写得很顺，我所触及皆以掌握。</p>
+<p><span>Eric Raymond</span>所推荐的<span>5</span>种语言位于能力谱系的不同位置。它们的相对位置如何讨论起来比较敏感。我要说的是，我认为<span>Lisp</span>最高。要支持我的观点，我要告诉你一样其它<span>4</span>种语言都没有的东西：离了宏，你咋能编程呢？<span>[5]</span></p>
+<p>很多语言都有叫做宏的东西。但是<span>Lisp</span>的宏独树一帜。信不信由你，宏和括号联系紧密。<span>Lisp</span>的设计者把那一堆括号加进来可不是为了标新立异。对于<span>Blub</span>程序员，<span>Lisp</span>看起来很怪。但是那些括号事出有因。它们是<span>Lisp</span>与其它语言本质区别的外在表现。</p>
+<p><span>Lisp</span>代码由<span>Lisp</span>数据对象构成。不是在像<span>&rdquo;</span>源码文件由字符构成<span>&ldquo;</span>或者<span>&rdquo;</span>字符串也是该语言支持的数据类型之一<span>&ldquo;</span>这样的浅显的层次上：在由解析器读进内存后，<span>Lisp</span>代码就由你能遍历的数据结构构成了。</p>
+<p>如果你了解编译器的工作原理，其实解析器干的活不多：要说<span>Lisp</span>的语法奇怪，还不如说<span>Lisp</span>没有语法。你写程序实际上是在写语法树－而其它语言需要编译器生成这种内部表示。你的程序完全可以存取这些语法树。你可以写程序去操作它。在<span>Lisp</span>里，这些程序叫做宏。它们是写程序的程序。</p>
+<p>写程序的程序？你哪天才能用得到啊？如果你用<span>Cobol</span>思考，不常用。而用<span>Lisp</span>思考的话，答案就是：天天都用。这里要是我能举个例子说明就好了。但是这样对于不懂<span>Lisp</span>的人就是在废话了；要是从头到尾讲明白这里篇幅也不够，在<span>Ansi Common Lisp</span>里我的进度很快，但也到<span>160</span>页才开始讲宏。</p>
+<p>但我想给一点有说服力的论据。<span>Viaweb</span>的编辑器代码里有<span>20</span>～<span>25%</span>的宏。宏比普通的<span>Lisp</span>程序难写，不该用的时候用就是画蛇添足。所以我们代码里的每个宏都有用。这意味着<span>20</span>～<span>25%</span>的代码是其它语言没法容易做到的。然而，挑剔的<span>Blub</span>程序员也许会找找我所声称的<span>Lisp</span>的神秘力量，这一堆宏应该能让他们迷惑不已。我们写这些宏不是为了自娱自乐－我们是个小创业公司，我们必须疯狂写程序，这样才能与竞争对手之间构筑技术上的壁垒。</p>
+<p>怀疑的人会说这有什么联系吗？我们代码里的一大块是在做其它语言很难做到的事情，发布的软件做了很多竞争对手的软件没法做到的事情。也许这其中有联系。我鼓励你顺着这条线索再走走。拄着拐杖的跛老头也许还有更多去了解。</p>
+<p><strong><span>Aikido for Startups</span></strong></p>
+<p><span>创业公司的合气道</span></p>
+<p>但是我不期望能让任何人（过了<span>25</span>岁）去学<span>Lisp</span>。这篇文章的目的不是要改变谁的思想，而是让那些有兴趣用<span>Lisp</span>的人更加确信－这些人知道<span>Lisp</span>很强大，但是因为它应用不广泛而有所顾虑。在竞争中，这是个优势。如果你的竞争对手不了解，<span>Lisp</span>的力量会加倍。</p>
+<p>如果你想在创业公司里用<span>Lisp</span>，不用担心它不流行。你应当期望保持现状。事实也如此。程序设计语言的天性就是让人们乐于用它。计算机硬件的发展比个人习惯的发展快得多，程序设计的实践通常比处理器的进步落后<span>10</span>～<span>20</span>年。在<span>MIT</span>，他们<span>60’</span>就开始用高级语言写程序了，但是很多公司到了<span>80’</span>还在用机器语言。我打赌，很多人会一直用机器语言写下去，直到有一天，处理器换成了<span>RISC</span>指令集－就像急着下班的酒吧服务员急着关门一样，端掉这些人的饭碗。</p>
+<p>通常，技术进步很快。但是程序设计语言不同：它不只是技术，它是程序员思考的工具。语言是技术和信仰的混合体<span>[6]</span>。于是，位于中间的语言（也就是中级程序员用的那些语言）动得跟冰山一样慢。<span>60’</span>由<span>Lisp</span>引入的垃圾回收功能，现在开始被接受。词法闭包，由<span>Lisp</span>在<span>70’</span>引入的，现在其它语言还没有广泛采纳。<span>60’</span>中<span>Lisp</span>引入的宏，现在还是处女地。</p>
+<p>很明显，中间的语言族有着巨大的惯性。我不认为你能和这个力量对抗。相反，你要向合气道的选手学习：以彼之道，还治彼身。</p>
+<p>如果你在大公司工作，这不太容易。你很难说你的服秃顶上司同意用<span>Lisp</span>写东西，他刚才才读到另一种语言新鲜出炉（就像<span>Ada</span>二十年前那样），正要征服世界。但是你要是为创业公司工作，没有秃顶老板干涉，你就能像我们那样化解<span>Blub</span>困境，转为自己的优势：你可以用那些黏糊在中间语言的竞争者不能采用的技术。</p>
+<p>如果你为创业公司工作，这儿有个估量对手的妙招：读读他们的招聘职位列表。他们网站上其它的东西无非是些股票图片和乏味的说明，但是招聘职位却必须反映他们要找的人，否则会引来一堆无关的求职者。</p>
+<p>在<span>Viaweb</span>工作的时候，我读了不少职位描述。大约每个月都有一个新的竞争对手加入这个行当。检查了他们的在线<span>Demo</span>后，我做的第一件事就是看看他们的招聘页。过了几年，我就知道要当心哪家。工作描述里要是<span>IT</span>类的成分越多，这家公司就越不构成威胁。对我们最安全的就是那些要求<span>Oracle</span>经验的，永远都不用担心他们。他们要是招聘<span>C++</span>或者<span>Java</span>开发者，也不用担心。但是要是找的是<span>Perl</span>或者<span>Python</span>程序员，就有点威胁了－这公司至少在技术方面是由真正的黑客掌管的。要是当初我看见一家招<span>Lisp</span>黑客的，我一定会忧心忡忡的。</p>
+<p>－－－－－</p>
+<p>注：</p>
+<p><span>[1] Viaweb</span>一开始有两块：编辑器（用<span>Lisp</span>写的，客户用来建站）和订单系统（用<span>C</span>写的，处理订单）。第一版主要是<span>Lisp,</span>因为订单系统很小。后来增加了两个模块：<span>C</span>写的图片生成器以及<span>Perl</span>写的结算工具。</p>
+<p><span>2003</span>年一月，<span>Yahoo</span>发布了新的编辑器，用<span>C++</span>和<span>Perl</span>写的。也很难讲这程序就不再是用<span>Lisp</span>写的了：因为要把它翻译成<span>C++</span>，他们先得写一个<span>Lisp</span>解释器－页面生成模板的代码据我所知还是<span>Lisp</span>的。（参考<span>Greenspun’s Tenth Rule</span>。）</p>
+<p><span>[2] Robert Morris</span>说我没必要那么保密。因为即使竞争对手知道我们用<span>Lisp</span>，他们也不会理解原因的：<span>&rdquo;</span>如果他们足够聪明，那他们应当已经在用<span>Lisp</span>了。<span>&ldquo;</span></p>
+<p><span>[3]&nbsp;</span>所有语言在图灵相等这一层上是一样强大的。但是这和程序员的意思不一样。（没人想在图灵机上写程序。）程序员在意的语言的能力也许不能形式化的定义，但一种解释就是，你想要在弱的语言里的要某种强语言的功能，就只能用弱语言去写一个解释器。如果<span>A</span>语言由一个操作可以把字符串里的空格移走，而<span>B</span>语言没有，这并不意味着<span>B</span>语言弱，因为你可以写个函数来完成这件事。但是要是<span>A</span>支持递归，而<span>B</span>不支持，这你就不好写个库函数来完成了。</p>
+<p><span>[4]&nbsp;</span>对<span>Nerd</span>们的注解：可能是个格，顶尖；形状不重要，这里至少有个偏序关系。</p>
+<p><span>[5]&nbsp;</span>把宏当作一个单独的功能有点误导。实践中，宏的作用通常由其它一些<span>Lisp</span>特性比如词法闭包以及<span>rest</span>参数大大加强。</p>
+<p><span>[6]&nbsp;</span>这样，比较编程语言要么挑起信仰口水战要么就只能在绝对中立的教材里，这只能是人类学的工作了。想追求平静，保护自己的所有的人会避免这个话题。但是，这问题只是一半和信仰相关；还有值得研究的东西，特别是你要设计一个新语言时。</p>
+<p>译注：</p>
+<p>[1] 翻译时中英混排，完成时提取中文可以用grep:&nbsp;</p>
+<p>&nbsp;</p>
+<p>from:<a href="http://article.yeeyan.org/view/11304/49653" target="_blank" rel="noopener">http://article.yeeyan.org/view/11304/49653</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/12/13/Beating-the-Average-为什么要学习Lisp-转/" data-id="cjs7p2wuw0000ng5m44h9x5je" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2011/01/19/程序优化小记/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          程序优化小记
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/12/11/巧用qmake工具生成专业的makefile/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">巧用qmake工具生成专业的makefile</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">八月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/07/">七月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/12/">十二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/10/">十月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/04/">四月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/03/">三月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/04/">四月 2008</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/01/">一月 2008</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/15/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/30/QT项目性能调优小记/">QT项目性能调优小记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/28/Windows下HG服务器的搭建/">Windows下HG服务器的搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2011/08/10/svn-tp-link-花生壳搭建外网服务器/">svn+tp-link+花生壳搭建外网服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 三闻鱼<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

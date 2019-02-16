@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>从农夫养牛问题推广到斐波那契数列 | Submarine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="今天在CSDN上看到一条题目：&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; &amp;nbsp;__一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛&amp;#8230;&amp;#8230;问农夫10年后有多少头牛?n年呢？&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则&amp;lt;o:p&amp;gt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从农夫养牛问题推广到斐波那契数列">
+<meta property="og:url" content="http://yoursite.com/2009/10/31/从农夫养牛问题推广到斐波那契数列/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="今天在CSDN上看到一条题目：&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; &amp;nbsp;__一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛&amp;#8230;&amp;#8230;问农夫10年后有多少头牛?n年呢？&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则&amp;lt;o:p&amp;gt">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:updated_time" content="2019-02-16T13:03:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从农夫养牛问题推广到斐波那契数列">
+<meta name="twitter:description" content="今天在CSDN上看到一条题目：&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; &amp;nbsp;__一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛&amp;#8230;&amp;#8230;问农夫10年后有多少头牛?n年呢？&amp;lt;o:p&amp;gt;&amp;lt;/o:p&amp;gt; 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则&amp;lt;o:p&amp;gt">
+<meta name="twitter:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+  
+    <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Submarine</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">chinese submarine</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-从农夫养牛问题推广到斐波那契数列" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2009/10/31/从农夫养牛问题推广到斐波那契数列/" class="article-date">
+  <time datetime="2009-10-31T09:30:00.000Z" itemprop="datePublished">2009-10-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      从农夫养牛问题推广到斐波那契数列
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">今天在<span lang="EN-US">CSDN</span>上看到一条题目：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><em><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt"><span style="mso-spacerun:yes">&nbsp;</span></span>__<span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">一个农夫养了一头牛，三年后，这头牛每年会生出<span lang="EN-US">1</span>头牛，生出来的牛三年后，又可以每年生出一头牛<span lang="EN-US">&#8230;&#8230;</span>问农夫<span lang="EN-US">10</span>年后有多少头牛<span lang="EN-US">?n</span>年呢？</span></em><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设<span lang="EN-US">f(n)</span>为第<span lang="EN-US">n</span>年的牛，则<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">f(n) = f(n - 1) + f(n - 2)&#8212;&#8212;&#8212;&#8212;&gt;</span><span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">表达式<span lang="EN-US">1-1&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即第<span lang="EN-US">n</span>年的牛为去年牛的个数<span lang="EN-US">f(n</span></span></p>
+<ul>
+<li>1)加上今年出生牛的个数<span lang="EN-US">,</span>那么今年有多少头牛能生呢？（不考虑死亡的牛）则为前年牛的个数即<span lang="EN-US">f(n - 2)</span>，因为前年的牛今年至少<span lang="EN-US">3</span>岁，即为表达式<span lang="EN-US">1-1</span>。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></li>
+</ul>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">&lt;o:p&gt;&nbsp;&lt;/o:p&gt;</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">推广一下，将牛生育年龄设为<span lang="EN-US">m</span>，那么计算的表达式就变为<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">f(n) = f(n - 1) + f(n - m + 1)&#8212;&#8212;&#8212;&#8212;&gt;</span><span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">表达式<span lang="EN-US">1-2&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即<span lang="EN-US">n-1</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数加上<span lang="EN-US">n-m+1</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年的牛生出的小牛。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">&lt;o:p&gt;&nbsp;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;
+mso-bidi-font-family:Arial;color:black;mso-font-kerning:0pt">那么下面讨论一个稍微复杂点的问题，如果增加一个条件，即牛会在第８年死去，那么第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;
+mso-bidi-font-family:Arial;color:black;mso-font-kerning:0pt">年会有多少条牛呢？<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">为了便于推导，这里先设几个函数<span lang="EN-US">:&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;color:black;
+mso-font-kerning:0pt"><span style="mso-list:Ignore">&#183;<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br></span></span></span><span lang="EN-US" style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">f(n)</span><span style="font-size:12.0pt;font-family:
+&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;mso-font-kerning:
+0pt">即第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;font-family:
+&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;mso-font-kerning:
+0pt">年牛的个数<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;color:black;
+mso-font-kerning:0pt"><span style="mso-list:Ignore">&#183;<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br></span></span></span><span lang="EN-US" style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">h(n)</span><span style="font-size:12.0pt;font-family:
+&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;mso-font-kerning:
+0pt">即第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;font-family:
+&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;mso-font-kerning:
+0pt">年出生的牛的个数<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:10.0pt;mso-bidi-font-size:12.0pt;font-family:Symbol;
+mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol;color:black;
+mso-font-kerning:0pt"><span style="mso-list:Ignore">&#183;<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br></span></span></span><span lang="EN-US" style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">g(n)</span><span style="font-size:12.0pt;font-family:
+&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;mso-font-kerning:
+0pt">即第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;font-family:
+&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;mso-font-kerning:
+0pt">年死亡的牛的个数<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">那么这里可以首先想到一个表达式<span lang="EN-US">:&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">(1)f(n) = f(n -1) + h(n) - g(n)&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数为第<span lang="EN-US">n-1</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数<span lang="EN-US">+</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年出生的牛的个数<span lang="EN-US">-</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年死亡的牛的个数<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">而第二个表达式即关于新增牛的个数<span lang="EN-US">h(n)</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">的：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">(2)h(n) = f(n - 2) - g(n - 1)&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年出生的牛的个数为第<span lang="EN-US">n-2</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数减去在第<span lang="EN-US">n-1</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年死亡的牛的个数<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">再看第三个表达式关于第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年死亡的牛的个数的：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">(3)g(n)=h(n - 7)&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年死亡的牛的个数为第<span lang="EN-US">n -<br>7</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年出生的牛的个数，这是一个对称的关系。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">&lt;o:p&gt;&nbsp;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">推导的步骤如下，将<span lang="EN-US">(2)</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">代入<span lang="EN-US">(1)&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即<span lang="EN-US">f(n) = f(n - 1) + f(n - 2)- g(n - 1) -<br>g(n)—-&gt;</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">（<span lang="EN-US">4</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">）<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">再将<span lang="EN-US">(3)</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">式代入<span lang="EN-US">(4)&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即<span lang="EN-US">f(n) = f(n - 1) + f(n - 2) - h(n - 8) -<br>h(n - 7)—–&gt;(5)&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">再将（<span lang="EN-US">2</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">）式代入（<span lang="EN-US">5</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">）的<span lang="EN-US">h(n - 7)&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即<span lang="EN-US">f(n) = f(n - 1) + f(n - 2) - (h(n - 8)</span></span></p>
+<ul>
+<li>f(n - 9) - g(n - 8))&lt;o:p&gt;&lt;/o:p&gt;</li>
+</ul>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">到了这里不难看出<span lang="EN-US">(h(n - 8) + f(n - 9) - g(n - 8))</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即为<span lang="EN-US">f(n - 8)</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">通过式<span lang="EN-US">(1)</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">。<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">则最终的表达式为<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">f(n) = f(n - 1) + f(n - 2) - f(n - 8)&lt;o:p&gt;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">即第<span lang="EN-US">n</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数为第<span lang="EN-US">n-1</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数<span lang="EN-US">+</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">第<span lang="EN-US">n-2</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数<span lang="EN-US">-</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">第<span lang="EN-US">n-8</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">年牛的个数<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">当牛的生育年龄用<span lang="EN-US">a</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">表示，死亡年龄用<span lang="EN-US">b</span></span><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">表示时，则表示为：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">f(n) = f(n - 1) + f(n &#8211; a +</span><span style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">　１<span lang="EN-US">) - f(n - b)&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<p><span lang="EN-US" style="font-size:12.0pt;font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:
+Arial;color:black;mso-font-kerning:0pt">&lt;o:p&gt;&nbsp;&lt;/o:p&gt;</span></p>
+<p><span style="font-size:12.0pt;
+font-family:&quot;微软雅黑&quot;,&quot;sans-serif&quot;;mso-bidi-font-family:Arial;color:black;
+mso-font-kerning:0pt">验证程序如下：<span lang="EN-US">&lt;o:p&gt;&lt;/o:p&gt;</span></span></p>
+<font class="Apple-style-span" face="微软雅黑, sans-serif" size="4"><span class="Apple-style-span" style="font-size: 16px;"><br></span></font><br><font class="Apple-style-span" face="微软雅黑, sans-serif" size="4"><div class="cnblogs_code"><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt><span id="Code_Closed_Text_172312" class="cnblogs_code_Collapse">Code</span><span id="Code_Open_Text_172312" style="display: none"><br><br><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+
+http://www.CodeHighlighter.com/
+
+--><span style="color: #0000FF;">using</span><span style="color: #000000;">&nbsp;System;<br><br>&nbsp;<br><br></span><span style="color: #0000FF;">namespace</span><span style="color: #000000;">&nbsp;TopCoder<br><br></span><span style="color: #000000;"><br>{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">class</span><span style="color: #000000;">&nbsp;Program<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">static</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000FF;">void</span><span style="color: #000000;">&nbsp;Main(</span><span style="color: #0000FF;">string</span><span style="color: #000000;">[]&nbsp;args)<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FeedCow&nbsp;feedCow&nbsp;</span><span style="color: #000000;">=</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000FF;">new</span><span style="color: #000000;">&nbsp;FeedCow();<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">for</span><span style="color: #000000;">&nbsp;(</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;i&nbsp;</span><span style="color: #000000;">=</span><span style="color: #000000;">&nbsp;</span><span style="color: #800080;">1</span><span style="color: #000000;">;&nbsp;i&nbsp;</span><span style="color: #000000;">&lt;</span><span style="color: #000000;">&nbsp;</span><span style="color: #800080;">30</span><span style="color: #000000;">;&nbsp;</span><span style="color: #000000;">++</span><span style="color: #000000;">i)<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;sum&nbsp;</span><span style="color: #000000;">=</span><span style="color: #000000;">&nbsp;feedCow.Feed(i,&nbsp;</span><span style="color: #800080;">5</span><span style="color: #000000;">,&nbsp;</span><span style="color: #800080;">7</span><span style="color: #000000;">);<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Console.WriteLine(</span><span style="color: #800000;">“</span><span style="color: #800000;">{0}:{1}</span><span style="color: #800000;">“</span><span style="color: #000000;">,&nbsp;i,&nbsp;sum);<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #808080;">///</span><span style="color: #008000;">&nbsp;</span><span style="color: #808080;">&lt;summary&gt;</span><span style="color: #008000;"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #808080;">///</span><span style="color: #008000;"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #808080;">///</span><span style="color: #008000;">&nbsp;</span><span style="color: #808080;">&lt;/summary&gt;</span><span style="color: #008000;"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #808080;">///</span><span style="color: #008000;">&nbsp;</span><span style="color: #808080;">&lt;param&nbsp;name=”year”&gt;</span><span style="color: #008000;">要计算的年限</span><span style="color: #808080;">&lt;/param&gt;</span><span style="color: #008000;"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #808080;">///</span><span style="color: #008000;">&nbsp;</span><span style="color: #808080;">&lt;param&nbsp;name=”age”&gt;</span><span style="color: #008000;">牛的生育年龄</span><span style="color: #808080;">&lt;/param&gt;</span><span style="color: #008000;"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #808080;">///</span><span style="color: #008000;">&nbsp;</span><span style="color: #808080;">&lt;param&nbsp;name=”deadAge”&gt;</span><span style="color: #008000;">牛的死亡年龄</span><span style="color: #808080;">&lt;/param&gt;</span><span style="color: #008000;"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #808080;">///</span><span style="color: #008000;">&nbsp;</span><span style="color: #808080;">&lt;returns&gt;&lt;/returns&gt;</span><span style="color: #808080;"><br><br></span><span style="color: #000000;"><br><br>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">public</span><span style="color: #000000;">&nbsp;</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;Feed(</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;year,&nbsp;</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;age,&nbsp;</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;deadAge)<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;{<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;sum&nbsp;</span><span style="color: #000000;">=</span><span style="color: #000000;">&nbsp;</span><span style="color: #800080;">1</span><span style="color: #000000;">;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;min&nbsp;</span><span style="color: #000000;">=</span><span style="color: #000000;">&nbsp;deadAge&nbsp;</span><span style="color: #000000;">&lt;</span><span style="color: #000000;">&nbsp;year&nbsp;</span><span style="color: #000000;">?</span><span style="color: #000000;">&nbsp;deadAge&nbsp;:&nbsp;year;<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">for</span><span style="color: #000000;">&nbsp;(</span><span style="color: #0000FF;">int</span><span style="color: #000000;">&nbsp;i&nbsp;</span><span style="color: #000000;">=</span><span style="color: #000000;">&nbsp;age;&nbsp;i&nbsp;</span><span style="color: #000000;">&lt;=</span><span style="color: #000000;">&nbsp;min;&nbsp;</span><span style="color: #000000;">++</span><span style="color: #000000;">i)<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum&nbsp;</span><span style="color: #000000;">+=</span><span style="color: #000000;">&nbsp;Feed(year&nbsp;</span><span style="color: #000000;">-</span><span style="color: #000000;">&nbsp;i&nbsp;</span><span style="color: #000000;">+</span><span style="color: #000000;">&nbsp;</span><span style="color: #800080;">1</span><span style="color: #000000;">,&nbsp;age,&nbsp;deadAge);<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000FF;">return</span><span style="color: #000000;">&nbsp;sum;<br><br></span><span style="color: #000000;"><br>&nbsp;&nbsp;&nbsp;&nbsp;}<br><br></span></span></div><br></font>
+
+<p>&nbsp;</p>
+<p>Over，欢迎大家拍砖~&nbsp;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2009/10/31/从农夫养牛问题推广到斐波那契数列/" data-id="cjs7p2wvr000ing5mv59yxl92" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2010/01/16/QT中的View-Model模型系列一/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          QT中的View Model模型系列一
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2009/10/27/NET-性能优化方法总结-转/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">NET 性能优化方法总结[转]</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">八月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/07/">七月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/12/">十二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/10/">十月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/04/">四月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/03/">三月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/04/">四月 2008</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/01/">一月 2008</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/15/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/30/QT项目性能调优小记/">QT项目性能调优小记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/28/Windows下HG服务器的搭建/">Windows下HG服务器的搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2011/08/10/svn-tp-link-花生壳搭建外网服务器/">svn+tp-link+花生壳搭建外网服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 三闻鱼<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

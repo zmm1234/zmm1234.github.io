@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>浏览器扩展系列————透明浏览器窗口的实现 | Submarine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="首先先看一下效果图：  &amp;nbsp;&amp;nbsp;&amp;nbsp; 本实现是基于WPF，VS版本2008 SP1。 &amp;nbsp;&amp;nbsp;&amp;nbsp; 先说一下在Winform中的实现方法：很简单通过设置窗体的opacity来实现，或者还可以设置TransparentKey来实现某种颜色透明。但是在WPF中则如何实现呢？ 通过设置窗体的opacity，那么得到结果就是webbrowser整体消失了。因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器扩展系列————透明浏览器窗口的实现">
+<meta property="og:url" content="http://yoursite.com/2009/04/26/浏览器扩展系列————透明浏览器窗口的实现/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="首先先看一下效果图：  &amp;nbsp;&amp;nbsp;&amp;nbsp; 本实现是基于WPF，VS版本2008 SP1。 &amp;nbsp;&amp;nbsp;&amp;nbsp; 先说一下在Winform中的实现方法：很简单通过设置窗体的opacity来实现，或者还可以设置TransparentKey来实现某种颜色透明。但是在WPF中则如何实现呢？ 通过设置窗体的opacity，那么得到结果就是webbrowser整体消失了。因">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://images.cnblogs.com/cnblogs_com/chinese-zmm/%E6%88%AA%E5%9B%BE.jpg">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/None.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/None.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/None.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/dot.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/None.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/dot.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/dot.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/dot.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/dot.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/None.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/dot.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/dot.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif">
+<meta property="og:image" content="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif">
+<meta property="og:updated_time" content="2019-02-16T13:03:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浏览器扩展系列————透明浏览器窗口的实现">
+<meta name="twitter:description" content="首先先看一下效果图：  &amp;nbsp;&amp;nbsp;&amp;nbsp; 本实现是基于WPF，VS版本2008 SP1。 &amp;nbsp;&amp;nbsp;&amp;nbsp; 先说一下在Winform中的实现方法：很简单通过设置窗体的opacity来实现，或者还可以设置TransparentKey来实现某种颜色透明。但是在WPF中则如何实现呢？ 通过设置窗体的opacity，那么得到结果就是webbrowser整体消失了。因">
+<meta name="twitter:image" content="http://images.cnblogs.com/cnblogs_com/chinese-zmm/%E6%88%AA%E5%9B%BE.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Submarine</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">chinese submarine</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-浏览器扩展系列————透明浏览器窗口的实现" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2009/04/26/浏览器扩展系列————透明浏览器窗口的实现/" class="article-date">
+  <time datetime="2009-04-26T11:44:00.000Z" itemprop="datePublished">2009-04-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      浏览器扩展系列————透明浏览器窗口的实现
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><span style="font-family: 宋体">首先先看一下效果图：</span></p>
+<p><img src="http://images.cnblogs.com/cnblogs_com/chinese-zmm/%E6%88%AA%E5%9B%BE.jpg" alt></p>
+<p><span style="font-family: 宋体">&nbsp;&nbsp;&nbsp; </span><span style="font-family: 宋体">本实现是基于WPF，VS版本2008 SP1。</span></p>
+<p><span style="font-family: 宋体">&nbsp;&nbsp;&nbsp; </span><span style="font-family: 宋体">先说一下在Winform中的实现方法：很简单通过设置窗体的opacity来实现，或者还可以设置TransparentKey来实现某种颜色透明。但是在WPF中则如何实现呢？</span></p>
+<p><span style="font-family: 宋体">通过设置窗体的opacity，那么得到结果就是webbrowser整体消失了。因为这里面涉及到WPF中&#8220;空域&#8221;的问题，相关的文章如下：</span></p>
+<p><span style="font-family: 宋体"><a href="http://blogs.msdn.com/changov/archive/2009/01/19/webbrowser-control-on-transparent-wpf-window.aspx" target="_blank" rel="noopener">http://blogs.msdn.com/changov/archive/2009/01/19/webbrowser-control-on-transparent-wpf-window.aspx</a></span></p>
+<p><span style="font-family: 宋体">&nbsp;&nbsp;&nbsp; </span><span style="font-family: 宋体">由此看来通过直接设置透明度的方法是不行了，那么回到原来的问题，&#8220;将浏览器窗体背景成透明&#8221;，其实这里的透明只是一个视觉上的感觉，就是浏览器中网页的背景和整个窗体的背景想融合就可以。看到这里，各位看官可能已经想到了，将浏览器中页面的背景绘制成被浏览器控件所覆盖出的背景就可以了。确实，我的实现也是依照这种思路走的。</span></p>
+<p><span style="font-family: 宋体">&nbsp;&nbsp;&nbsp; </span><span style="font-family: 宋体">这里主要用到了两个技术：</span></p>
+<p><span style="font-family: Wingdings">l&nbsp;</span><span style="font-family: 宋体">Mshtml</span><span style="font-family: 宋体">操作网页中元素，通过给body标签添加行为来实现背景的绘制。</span></p>
+<p>&nbsp;</p>
+<div class="cnblogs_code"><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt><span class="cnblogs_code_Collapse" id="Code_Closed_Text_171324">Code</span><span id="Code_Open_Text_171324" style="display: none"><br><br><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+
+http://www.CodeHighlighter.com/
+
+--><img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt><span style="color: #000000">[ComVisible(</span><span style="color: #0000ff">true</span><span style="color: #000000">),&nbsp;Guid(</span><span style="color: #800000">“</span><span style="color: #800000">0015EC28-C85F-49a8-9B1A-DC91E6345274</span><span style="color: #800000">“</span><span style="color: #000000">),<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;ClassInterface(ClassInterfaceType.AutoDispatch)]<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">class</span><span style="color: #000000">&nbsp;MyGadgetBodyBehavior&nbsp;:&nbsp;IElementBehavior,&nbsp;IHTMLPainter<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="Codehighlighter1_193_385_Closed_Text" style="border-right: #808080 1px solid; border-top: #808080 1px solid; display: none; border-left: #808080 1px solid; border-bottom: #808080 1px solid; background-color: #ffffff"><img src="http://www.cnblogs.com/Images/dot.gif" alt></span><span id="Codehighlighter1_193_385_Open_Text"><span style="color: #000000">{<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">delegate</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;SizeChangedEventHandler(SizeChangedEventArgs&nbsp;e);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">event</span><span style="color: #000000">&nbsp;SizeChangedEventHandler&nbsp;onSizeChangedEvent;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">private</span><span style="color: #000000">&nbsp;AppScreenSnapHelper&nbsp;snapHelper;</span></span></span></div>
+
+<p>&nbsp;</p>
+<p>下面是绘制部分的代码</p>
+<div class="cnblogs_code"><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt><span class="cnblogs_code_Collapse" id="Code_Closed_Text_171446">Code</span><span id="Code_Open_Text_171446" style="display: none"><br><br><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+
+http://www.CodeHighlighter.com/
+
+--><img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">public</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">void</span><span style="color: #000000">&nbsp;Draw(RECT&nbsp;rcBounds,&nbsp;RECT&nbsp;rcUpdates,&nbsp;</span><span style="color: #0000ff">int</span><span style="color: #000000">&nbsp;lDrawFlags,&nbsp;IntPtr&nbsp;hdc,&nbsp;IntPtr&nbsp;pvDrawObject)<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="Codehighlighter1_106_1488_Closed_Text" style="border-right: #808080 1px solid; border-top: #808080 1px solid; display: none; border-left: #808080 1px solid; border-bottom: #808080 1px solid; background-color: #ffffff"><img src="http://www.cnblogs.com/Images/dot.gif" alt></span><span id="Codehighlighter1_106_1488_Open_Text"><span style="color: #000000">{<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Graphics&nbsp;g&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;Graphics.FromHdc(hdc);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bitmap&nbsp;buffer&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;Bitmap(width,&nbsp;height);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Graphics&nbsp;gBuffer&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;Graphics.FromImage(buffer);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AppScreenSnapHelper.Image&nbsp;image&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;snapHelper.GetScreenSnap();<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gBuffer.DrawImage(image.Bitmap,&nbsp;</span><span style="color: #800080">0</span><span style="color: #000000">,&nbsp;</span><span style="color: #800080">0</span><span style="color: #000000">);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image.Dispose();<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">string</span><span style="color: #000000">&nbsp;imageSrc&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;((IHTMLElement2)body).currentStyle.backgroundImage;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">if</span><span style="color: #000000">&nbsp;(</span><span style="color: #000000">!</span><span style="color: #0000ff">string</span><span style="color: #000000">.IsNullOrEmpty(imageSrc))<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="Codehighlighter1_569_1084_Closed_Text" style="border-right: #808080 1px solid; border-top: #808080 1px solid; display: none; border-left: #808080 1px solid; border-bottom: #808080 1px solid; background-color: #ffffff"><img src="http://www.cnblogs.com/Images/dot.gif" alt></span><span id="Codehighlighter1_569_1084_Open_Text"><span style="color: #000000">{<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Match&nbsp;match&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;Regex.Match(imageSrc,&nbsp;</span><span style="color: #800000">@”</span><span style="color: #800000">url(“”file:///(?&lt;path&gt;.*)””)</span><span style="color: #800000">“</span><span style="color: #000000">);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">if</span><span style="color: #000000">&nbsp;(match.Success)<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="Codehighlighter1_712_1070_Closed_Text" style="border-right: #808080 1px solid; border-top: #808080 1px solid; display: none; border-left: #808080 1px solid; border-bottom: #808080 1px solid; background-color: #ffffff"><img src="http://www.cnblogs.com/Images/dot.gif" alt></span><span id="Codehighlighter1_712_1070_Open_Text"><span style="color: #000000">{<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;imageSrc&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;match.Groups[</span><span style="color: #800000">“</span><span style="color: #800000">path</span><span style="color: #800000">“</span><span style="color: #000000">].Value;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">using</span><span style="color: #000000">&nbsp;(Bitmap&nbsp;bitmap&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;Bitmap(imageSrc))<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="Codehighlighter1_858_1052_Closed_Text" style="border-right: #808080 1px solid; border-top: #808080 1px solid; display: none; border-left: #808080 1px solid; border-bottom: #808080 1px solid; background-color: #ffffff"><img src="http://www.cnblogs.com/Images/dot.gif" alt></span><span id="Codehighlighter1_858_1052_Open_Text"><span style="color: #000000">{<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">object</span><span style="color: #000000">&nbsp;obj&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;((IHTMLElement2)body).currentStyle.marginLeft;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gBuffer.DrawImage(bitmap,&nbsp;</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;Rectangle(</span><span style="color: #800080">0</span><span style="color: #000000">,&nbsp;</span><span style="color: #800080">0</span><span style="color: #000000">,&nbsp;width,&nbsp;height));<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></span><span style="color: #000000"><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></span><span style="color: #000000"><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></span><span style="color: #000000"><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g.DrawImage(buffer,&nbsp;rcUpdates.left,&nbsp;rcUpdates.top,<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;Rectangle(rcUpdates.left&nbsp;</span><span style="color: #000000">-</span><span style="color: #000000">&nbsp;rcBounds.left,<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcUpdates.top&nbsp;</span><span style="color: #000000">-</span><span style="color: #000000">&nbsp;rcBounds.top,&nbsp;rcUpdates.right&nbsp;</span><span style="color: #000000">-</span><span style="color: #000000">&nbsp;rcUpdates.left,<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rcUpdates.bottom&nbsp;</span><span style="color: #000000">-</span><span style="color: #000000">&nbsp;rcUpdates.top),&nbsp;GraphicsUnit.Pixel);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer.Dispose();<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gBuffer.Dispose();<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;g.Dispose();<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></span></span></div>
+
+<p>&nbsp;</p>
+<p>l&nbsp;<span style="font-size: 10pt; font-family: 宋体">RenderTargetBitmap</span><span style="font-size: 10pt; font-family: 宋体">类用来给应用程序截图：</span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<div class="cnblogs_code"><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt><span class="cnblogs_code_Collapse" id="Code_Closed_Text_171631">Code</span><span id="Code_Open_Text_171631" style="display: none"><br><br><!--
+
+Code highlighting produced by Actipro CodeHighlighter (freeware)
+
+http://www.CodeHighlighter.com/
+
+--><img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt><span style="color: #0000ff">internal</span><span style="color: #000000">&nbsp;Image&nbsp;GetScreenSnap(</span><span style="color: #0000ff">bool</span><span style="color: #000000">&nbsp;isForceRefresh)<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="Codehighlighter1_58_963_Closed_Text" style="border-right: #808080 1px solid; border-top: #808080 1px solid; display: none; border-left: #808080 1px solid; border-bottom: #808080 1px solid; background-color: #ffffff"><img src="http://www.cnblogs.com/Images/dot.gif" alt></span><span id="Codehighlighter1_58_963_Open_Text"><span style="color: #000000">{<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">if</span><span style="color: #000000">&nbsp;(CheckPositionAndSize()&nbsp;</span><span style="color: #000000">&amp;&amp;</span><span style="color: #000000">&nbsp;</span><span style="color: #000000">!</span><span style="color: #000000">isForceRefresh)<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif" alt><img src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span id="Codehighlighter1_131_182_Closed_Text" style="border-right: #808080 1px solid; border-top: #808080 1px solid; display: none; border-left: #808080 1px solid; border-bottom: #808080 1px solid; background-color: #ffffff"><img src="http://www.cnblogs.com/Images/dot.gif" alt></span><span id="Codehighlighter1_131_182_Open_Text"><span style="color: #000000">{<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">return</span><span style="color: #000000">&nbsp;screenImage;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></span><span style="color: #000000"><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;control.Visibility&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;Visibility.Hidden;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RenderTargetBitmap&nbsp;bitmap&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;RenderTargetBitmap((</span><span style="color: #0000ff">int</span><span style="color: #000000">)parentWindow.Width,<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(</span><span style="color: #0000ff">int</span><span style="color: #000000">)parentWindow.Width,&nbsp;</span><span style="color: #800080">96</span><span style="color: #000000">,&nbsp;</span><span style="color: #800080">96</span><span style="color: #000000">,&nbsp;PixelFormats.Pbgra32);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bitmap.Render(parentWindow);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BitmapSource&nbsp;bitmapSource&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;bitmap.CloneCurrentValue();<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bitmap&nbsp;newBitmap&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;ConvertSourceImageToBitmap(bitmapSource);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newBitmap&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;ClipBitmap(newBitmap,&nbsp;</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;System.Drawing.Rectangle((</span><span style="color: #0000ff">int</span><span style="color: #000000">)oldPoint.X,&nbsp;(</span><span style="color: #0000ff">int</span><span style="color: #000000">)oldPoint.Y,<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((</span><span style="color: #0000ff">int</span><span style="color: #000000">)control.Width&nbsp;</span><span style="color: #000000">==</span><span style="color: #000000">&nbsp;</span><span style="color: #800080">0</span><span style="color: #000000">&nbsp;</span><span style="color: #000000">?</span><span style="color: #000000">&nbsp;</span><span style="color: #800080">1</span><span style="color: #000000">&nbsp;:&nbsp;(</span><span style="color: #0000ff">int</span><span style="color: #000000">)control.Width),&nbsp;((</span><span style="color: #0000ff">int</span><span style="color: #000000">)control.Height)&nbsp;</span><span style="color: #000000">==</span><span style="color: #000000">&nbsp;</span><span style="color: #800080">0</span><span style="color: #000000">&nbsp;</span><span style="color: #000000">?</span><span style="color: #000000">&nbsp;</span><span style="color: #800080">1</span><span style="color: #000000">&nbsp;:&nbsp;(</span><span style="color: #0000ff">int</span><span style="color: #000000">)control.Height));<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt><br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;control.Visibility&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;Visibility.Visible;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;screenImage&nbsp;</span><span style="color: #000000">=</span><span style="color: #000000">&nbsp;</span><span style="color: #0000ff">new</span><span style="color: #000000">&nbsp;Image(newBitmap,&nbsp;imagePtr);<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: #0000ff">return</span><span style="color: #000000">&nbsp;screenImage;<br><br><img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif" alt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</span></span></span></div>
+
+<p>在截图的时候这里使用了一个技巧就是，先将控件隐藏，然后截图，最后恢复控件的显示。&nbsp;</p>
+<p>最后说一下本实现的一些缺陷：</p>
+<ol>
+<li>&nbsp;如果将应用程序的背景设置为透明，则浏览器的背景将呈现白色，因为本实现使用的是应用程序的背景来进行截图，如果应用程序背景被透明，则截图得到的也是一张透明的图片，绘制到页面上后并不能达到透明的效果。如果想在这种情况下实现透明，可以考虑对桌面背景进行截图。</li>
+<li>如果网页过大出现滚动条，那么网页中未呈现的部分并不能透明，因为截图只能作用于已经显示的部分。所以本实现用于显示本地控制好大小的html页面有比较好的效果。</li>
+</ol>
+<p>具体项目下载如下：</p>
+<p><a href="http://files.cnblogs.com/chinese-zmm/TransportWebBrowserDemo.rar" target="_blank" rel="noopener">/Files/chinese-zmm/TransportWebBrowserDemo.rar</a>&nbsp;</p>
+<p>&nbsp;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2009/04/26/浏览器扩展系列————透明浏览器窗口的实现/" data-id="cjs7p2ww9000qng5mx9jk2del" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2009/08/08/TimeZoneChange事件的捕获/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          TimeZoneChange事件的捕获
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2009/03/28/浏览器扩展系列————异步可插入协议（pluggable-protocol）的实现/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">浏览器扩展系列————异步可插入协议（pluggable protocol）的实现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">八月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/07/">七月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/12/">十二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/10/">十月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/04/">四月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/03/">三月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/04/">四月 2008</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/01/">一月 2008</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/15/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/30/QT项目性能调优小记/">QT项目性能调优小记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/28/Windows下HG服务器的搭建/">Windows下HG服务器的搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2011/08/10/svn-tp-link-花生壳搭建外网服务器/">svn+tp-link+花生壳搭建外网服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 三闻鱼<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

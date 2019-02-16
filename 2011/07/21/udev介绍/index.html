@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>udev介绍 | Submarine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="如果你使用Linux比较长时间了，那你就知道，在对待设备文件这块，Linux改变了几次策 略。在Linux早期，设备文件仅仅是是一些带有适当的属性集的普通文件，它由mknod命令创建，文件存放在/dev目录下。后来，采用了devfs, 一个基于内核的动态设备文件系统，他首次出现在2.3.46内核中。Mandrake，Gentoo等Linux分发版本采用了这种方式。devfs创建 的设备文件是动态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="udev介绍">
+<meta property="og:url" content="http://yoursite.com/2011/07/21/udev介绍/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="如果你使用Linux比较长时间了，那你就知道，在对待设备文件这块，Linux改变了几次策 略。在Linux早期，设备文件仅仅是是一些带有适当的属性集的普通文件，它由mknod命令创建，文件存放在/dev目录下。后来，采用了devfs, 一个基于内核的动态设备文件系统，他首次出现在2.3.46内核中。Mandrake，Gentoo等Linux分发版本采用了这种方式。devfs创建 的设备文件是动态">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-16T13:03:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="udev介绍">
+<meta name="twitter:description" content="如果你使用Linux比较长时间了，那你就知道，在对待设备文件这块，Linux改变了几次策 略。在Linux早期，设备文件仅仅是是一些带有适当的属性集的普通文件，它由mknod命令创建，文件存放在/dev目录下。后来，采用了devfs, 一个基于内核的动态设备文件系统，他首次出现在2.3.46内核中。Mandrake，Gentoo等Linux分发版本采用了这种方式。devfs创建 的设备文件是动态">
+  
+    <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Submarine</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">chinese submarine</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-udev介绍" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2011/07/21/udev介绍/" class="article-date">
+  <time datetime="2011-07-21T03:38:00.000Z" itemprop="datePublished">2011-07-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      udev介绍
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>如果你使用Linux比较长时间了，那你就知道，在对待设备文件这块，Linux改变了几次策 略。在Linux早期，设备文件仅仅是是一些带有适当的属性集的普通文件，它由mknod命令创建，文件存放在/dev目录下。后来，采用了devfs, 一个基于内核的动态设备文件系统，他首次出现在2.3.46内核中。Mandrake，Gentoo等Linux分发版本采用了这种方式。devfs创建 的设备文件是动态的。但是devfs有一些严重的限制，从2.6.13版本后移走了。目前取代他的便是文本要提到的udev－－一个用户空间程序。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>目前很多的Linux分发版本采纳了udev的方式，因为它在Linux设备访问，特别是那些对设备有极端需求的站点（比如需要控制上千个硬盘）和热插拔设备（比如USB摄像头和MP3播放器）上解决了几个问题。下面我我们来看看如何管理udev设备。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>实际上，对于那些为磁盘，终端设备等准备的标准配置文件而言，你不需要修改什么。但是，你需要了解udev配置来使用新的或者外来设备，如果不修改配置， 这些设备可能无法访问，或者说Linux可能会采用不恰当的名字，属组或权限来创建这些设备文件。你可能也想知道如何修改RS－232串口，音频设备等文 件的属组或者权限。这点在实际的Linux实施中是会遇到的。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p><strong>为什么使用udev</strong></p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>在此之前的设备文件管理方法（静态文件和devfs）有几个缺点：</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>*不确定的设备映射。特别是那些动态设备，比如USB设备，设备文件到实际设备的映射并不可靠和确定。举一个例子：如果你有两个USB打印机。一个可能称 为/dev/usb/lp0,另外一个便是/dev/usb/lp1。但是到底哪个是哪个并不清楚，lp0,lp1和实际的设备没有一一对应的关系，因为 他可能因为发现设备的顺序，打印机本身关闭等原因而导致这种映射并不确定。理想的方式应该是：两个打印机应该采用基于他们的序列号或者其他标识信息的唯一 设备文件来映射。但是静态文件和devfs都无法做到这点。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>*没有足够的主/辅设备号。我们知道，每一个设备文件是有两个8位的数字：一个是主设备号 ，另外一个是辅设备号来分配的。这两个8位的数字加上设备类型（块设备或者字符设备）来唯一标识一个设备。不幸的是，关联这些身边的的数字并不足够。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>*/dev目录下文件太多。一个系统采用静态设备文件关联的方式，那么这个目录下的文件必然是足够多。而同时你又不知道在你的系统上到底有那些设备文件是激活的。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>*命名不够灵活。尽管devfs解决了以前的一些问题，但是它自身又带来了一些问题。其中一个就是命名不够灵活；你别想非常简单的就能修改设备文件的名字。缺省的devfs命令机制本身也很奇怪，他需要修改大量的配置文件和程序。;</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>*内核内存使用，devfs特有的另外一个问题是，作为内核驱动模块，devfs需要消耗大量的内存，特别当系统上有大量的设备时（比如上面我们提到的系统一个上有好几千磁盘时）</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>udev的目标是想解决上面提到的这些问题，他通采用用户空间(user-space)工具来管理/dev/目录树，他和文件系统分开。知道如何改变缺省配置能让你之大如何定制自己的系统，比如创建设备字符连接，改变设备文件属组，权限等。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p><strong>udev配置文件</strong></p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>主要的udev配置文件是/etc/udev/udev.conf。这个文件通常很短，他可能只是包含几行#开头的注释，然后有几行选项：</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>udev_root<span>=</span><strong>“</strong>/dev/<strong>“
+</strong>udev_rules<span>=</span><strong>“</strong>/etc/udev/rules.d/<strong>“
+</strong>udev_log<span>=</span><strong>“</strong>err<strong>“</strong></p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>上面的第二行非常重要，因为他表示udev规则存储的目录，这个目录存储的是以.rules结束的文件。每一个文件处理一系列规则来帮助udev分配名字给设备文件以保证能被内核识别。&nbsp;<br>你的/etc/udev/rules.d下面可能有好几个udev规则文件，这些文件一部分是udev包安装的，另外一部分则是可能是别的硬件或者软件包 生成的。比如在Fedora Core 5系统上，sane-backends包就会安装60-libsane.rules文件，另外initscripts包会安装60-net.rules文 件。这些规则文件的文件名通常是两个数字开头，它表示系统应用该规则的顺序。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>规则文件里的规则有一系列的键/值对组成，键/值对之间用逗号(,)分割。每一个键或者是用户匹配键，或者是一个赋值键。匹配键确定规则是否被应用，而赋 值键表示分配某值给该键。这些值将影响udev创建的设备文件。赋值键可以处理一个多值列表。匹配键和赋值键操作符解释见下表：<br>&lt;pre&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; udev 键/值对操作符<br>操作符&nbsp;&nbsp;&nbsp;&nbsp; 匹配或赋值t&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 解释<br>－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－－<br>&nbsp;&nbsp;&nbsp; ==&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 匹配&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 相等比较<br>&nbsp;&nbsp;&nbsp; !=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 匹配&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 不等比较<br>&nbsp;&nbsp;&nbsp; =&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 赋值&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 分配一个特定的值给该键，他可以覆盖之前的赋值。<br>&nbsp;&nbsp;&nbsp; +=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 赋值&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 追加特定的值给已经存在的键<br>&nbsp;&nbsp;&nbsp; :=&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 赋值&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 分配一个特定的值给该键，后面的规则不可能覆盖它。&nbsp;<br>&lt;/pre&gt;<br>这有点类似我们常见的编程语言，比如C语言。只是这里的键一次可以处理多个值。有一些键在udev规则文件里经常出现，这些键的值可以使用通配符(<em>,?,甚至范围，比如[0-9])，这些常用键列举如下：<br>&lt;pre&gt;<br>常用udev键<br>键&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 含义<br>ACTION&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 一个时间活动的名字，比如add，当设备增加的时候<br>KERNEL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在内核里看到的设备名字，比如sd</em>表示任意SCSI磁盘设备<br>DEVPATH&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 内核设备录进，比如/devices/*<br>SUBSYSTEM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 子系统名字，比如sound,net<br>BUS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 总线的名字，比如IDE,USB<br>DRIVER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 设备驱动的名字，比如ide-cdrom<br>ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 独立于内核名字的设备名字<br>SYSFS{ value}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sysfs属性值，他可以表示任意<br>ENV{ key}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 环境变量，可以表示任意<br>PROGRAM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 可执行的外部程序，如果程序返回0值，该键则认为为真(true)<br>RESULT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 上一个PROGRAM调用返回的标准输出。<br>NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 根据这个规则创建的设备文件的文件名。注意：仅仅第一行的NAME描述是有效的，后面的均忽略。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 如果你想使用使用两个以上的名字来访问一个设备的话，可以考虑SYMLINK键。<br>SYMLINK&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 根据规则创建的字符连接名<br>OWNER&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 设备文件的属组<br>GROUP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 设备文件所在的组。<br>MODE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 设备文件的权限，采用8进制<br>RUN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 为设备而执行的程序列表<br>LABEL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 在配置文件里为内部控制而采用的名字标签(下下面的GOTO服务)<br>GOTO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 跳到匹配的规则（通过LABEL来标识），有点类似程序语言中的GOTO<br>IMPORT{ type}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 导入一个文件或者一个程序执行后而生成的规则集到当前文件<br>WAIT_FOR_SYSFS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 等待一个特定的设备文件的创建。主要是用作时序和依赖问题。<br>PTIONS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 特定的选项： last_rule 对这类设备终端规则执行； ignore_device 忽略当前规则； ignore_remove 忽略接下来的并移走请求。<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; all_partitions 为所有的磁盘分区创建设备文件。<br>&lt;/pre&gt;<br>我们给出一个列子来解释如何使用这些键。下面的例子来自Fedora Core 5系统的标准配置文件。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<div class="msgborder" style="margin-top: 1em; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 28px; padding: 0px;"><br><pre>KERNEL=<strong>=”***</strong>“<strong>,&nbsp;OWNER=</strong>“<strong>root</strong>“<strong>&nbsp;GROUP=</strong>“<strong>root</strong>“<strong>,&nbsp;MODE=</strong>“<strong>0600</strong>“<strong><br>KERNEL=</strong>=”<strong>tty</strong>“<strong>,&nbsp;NAME=</strong>“<strong>%k</strong>“<strong>,&nbsp;GROUP=</strong>“<strong>tty</strong>“<strong>,&nbsp;MODE=</strong>“<strong>0666</strong>“<strong>,&nbsp;OPTIONS=</strong>“<strong>last_rule</strong>“<strong><br>KERNEL=</strong>=”<strong>scd[0-9]*</strong>“<strong>,&nbsp;SYMLINK+=</strong>“<strong>cdrom&nbsp;cdrom-%k</strong>“<strong><br>KERNEL=</strong>=”<strong>hd[a-z]</strong>“<strong>,&nbsp;BUS=</strong>=”<strong>ide</strong>“<strong>,&nbsp;SYSFS{removable}</strong>==”<strong>1</strong>“<strong>,&nbsp;SYSFS{device/media}</strong>==”<strong>cdrom</strong>“<strong>,&nbsp;SYMLINK+=</strong>“<strong>cdrom&nbsp;cdrom-%k</strong>“<strong><br>ACTION=</strong>=”<strong>add</strong>“<strong>,&nbsp;SUBSYSTEM=</strong>=”<strong>scsi_device</strong>“<strong>,&nbsp;RUN+=</strong>“<strong>/sbin/modprobe&nbsp;sg</strong>“**</pre><br></div>
+
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"><br>上面的例子给出了5个规则，每一个都是KERNEL或者ACTION键开头：</span></span></span></p>
+<p><em>第一个规则是缺省的，他匹配任意被内核识别到的设备，然后设定这些设备的属组是root，组是root，访问权限模式是0600(-rw——-)。这也是一个安全的缺省设置保证所有的设备在默认情况下只有root可以读写。
+</em>第二个规则也是比较典型的规则了。它匹配终端设备(tty)，然后设置新的权限为0600，所在的组是tty。它也设置了一个特别的设备文件名:%K。在这里例子里，%k代表设备的内核名字。那也就意味着内核识别出这些设备是什么名字，就创建什么样的设备文件名。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p><em>第三行开始的KERNEL==”scd[0-9]</em>“,表示 SCSI CD-ROM 驱动. 它创建一对设备符号连接：cdrom和cdrom-%k。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>*第四行，开始的 KERNEL==”hd[a-z]”, 表示ATA CDROM驱动器。这个规则创建和上面的规则相同的符号连接。ATA CDROM驱动器需要sysfs值以来区别别的ATA设备，因为SCSI CDROM可以被内核唯一识别。.</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>*第五行以 ACTION==”add”开始，它告诉udev增加 /sbin/modprobe sg 到命令列表，当任意SCSI设备增加到系统后，这些命令将执行。其效果就是计算机应该会增加sg内核模块来侦测新的SCSI设备。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>当然，上面仅仅是一小部分例子，如果你的系统采用了udev方式，那你应该可以看到更多的规则。如果你想修改设备的权限或者创建信的符号连接，那么你需要熟读这些规则，特别是要仔细注意你修改的那些与之相关的设备。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p><strong>修改你的udev配置</strong></p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>在修改udev配置之前，我们一定要仔细，通常的考虑是：你最好不要修改系统预置的那些规则，特别不要指定影响非常广泛的配置，比如上面例子中的第一行。不正确的配置可能会导致严重的系统问题或者系统根本就无法这个正确的访问设备。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<p>而我们正确的做法应该是在/etc/udev/rules.d/下创建一个信的规则文件。确定你给出的文件的后缀是rules文件名给出的数字序列应该比 标准配置文件高。比如，你可以创建一个名为99-my-udev.rules的规则文件。在你的规则文件中，你可以指定任何你想修改的配置，比如，假设你 修改修改floppy设备的所在组，还准备创建一个信的符号连接/dev/floppy，那你可以这么写：</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<div class="msgborder" style="margin-top: 1em; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 28px; padding: 0px;"><br><pre>KERNEL=<strong>=”</strong>fd[0-9]<strong>*”</strong>,&nbsp;GROUP=<strong>“</strong>users<strong>“</strong>,&nbsp;&nbsp;&nbsp;SYMLINK+=<strong>“</strong>floppy<strong>“</strong>&nbsp;</pre><br></div>
+
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"><br>有些发行版本，比如Fedora，采用了外部脚本来修改某些特定设备的属组，组关系和权限。因此上面的改动可能并不见得生效。如果你遇到了这个问题，你就需要跟踪和修改这个脚本来达到你的目的。或者你可以修改PROGRAM或RUN键的值来做到这点。</span></span></span></p>
+<p>某些规则的修改可能需要更深的挖掘。比如，你可能想在一个设备上使用sysfs信息来唯一标识一个设备。这些信息最好通过udevinfo命令来获取。</p>
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"></span></span></span></p>
+<div class="msgborder" style="margin-top: 1em; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 28px; padding: 0px;"><br><pre>$&nbsp;udevinfo&nbsp;&ndash;a&nbsp;&ndash;p&nbsp;$(udevinfo&nbsp;&ndash;q&nbsp;path&nbsp;&nbsp;&nbsp;&ndash;n&nbsp;/dev/hda)</pre><br></div>
+
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"><br>上 面的命令两次使用udevinfo：一次是返回sysfs设备路径(他通常和我们看到的Linux设备文件名所在路径－－/dev/hda－－不同)；第 二次才是查询这个设备路径，结果将是非常常的syfs信息汇总。你可以找到最够的信息来唯一标志你的设备，你可以采用适当的替换udev配置文件中的 SYSFS选项。下面的结果就是上面的命令输出</span></span></span></p>
+<div class="msgborder" style="margin-top: 1em; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 28px; padding: 0px;"><br><pre><strong>[</strong>root@localhost&nbsp;rules.d<strong>]</strong>#&nbsp;udevinfo&nbsp;-a&nbsp;-p&nbsp;$(udevinfo&nbsp;-q&nbsp;path&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-n&nbsp;&nbsp;&nbsp;/dev/hda1)</pre><br><br>Udevinfo&nbsp;starts&nbsp;with&nbsp;the&nbsp;device&nbsp;specified&nbsp;by&nbsp;the&nbsp;devpath&nbsp;and&nbsp;then<br>walks&nbsp;up&nbsp;the&nbsp;chain&nbsp;of&nbsp;parent&nbsp;devices.&nbsp;It&nbsp;prints&nbsp;<strong>for</strong>&nbsp;every&nbsp;device<br>found,&nbsp;all&nbsp;possible&nbsp;attributes&nbsp;<strong>in</strong>&nbsp;the&nbsp;udev&nbsp;rules&nbsp;key&nbsp;format.<br>A&nbsp;rule&nbsp;to&nbsp;match,&nbsp;can&nbsp;be&nbsp;composed&nbsp;by&nbsp;the&nbsp;attributes&nbsp;of&nbsp;the&nbsp;device<br>and&nbsp;the&nbsp;attributes&nbsp;from&nbsp;one&nbsp;single&nbsp;parent&nbsp;device.<br><br>&nbsp;&nbsp;&nbsp;looking&nbsp;at&nbsp;device&nbsp;<strong>‘</strong>/block/hda/hda1<strong>‘</strong>:<br>&nbsp;&nbsp;&nbsp;&nbsp;KERNEL=<strong>=”</strong>hda1<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;SUBSYSTEM=<strong>=”</strong>block<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;DRIVER=<strong>=””</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTR{stat}<strong>==”</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1133&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2268&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTR{size}<strong>==”</strong>208782<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTR{start}<strong>==”</strong>63<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTR{dev}<strong>==”</strong>3:1<strong>“</strong><br><br>&nbsp;&nbsp;&nbsp;looking&nbsp;at&nbsp;parent&nbsp;device&nbsp;<strong>‘</strong>/block/hda<strong>‘</strong>:<br>&nbsp;&nbsp;&nbsp;&nbsp;KERNELS=<strong>=”</strong>hda<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;SUBSYSTEMS=<strong>=”</strong>block<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;DRIVERS=<strong>=””</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{stat}<strong>==”</strong>&nbsp;&nbsp;&nbsp;&nbsp;28905&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;18814&nbsp;&nbsp;&nbsp;1234781&nbsp;&nbsp;&nbsp;&nbsp;302540&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;34087&nbsp;&nbsp;&nbsp;&nbsp;133247&nbsp;&nbsp;&nbsp;&nbsp;849708&nbsp;&nbsp;&nbsp;&nbsp;981336&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;218340&nbsp;&nbsp;&nbsp;1283968<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{size}<strong>==”</strong>117210240<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{removable}<strong>==”</strong>0<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{range}<strong>==”</strong>64<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{dev}<strong>==”</strong>3:0<strong>“</strong><br><br>&nbsp;&nbsp;&nbsp;looking&nbsp;at&nbsp;parent&nbsp;device&nbsp;<strong>‘</strong>/devices/pci0000:00/0000:00:1f.1/ide0/0.0<strong>‘</strong>:<br>&nbsp;&nbsp;&nbsp;&nbsp;KERNELS=<strong>=”</strong>0.0<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;SUBSYSTEMS=<strong>=”</strong>ide<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;DRIVERS=<strong>=”</strong>ide-disk<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{modalias}<strong>==”</strong>ide:m-disk<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{drivename}<strong>==”</strong>hda<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{media}<strong>==”</strong>disk<strong>“</strong><br><br>&nbsp;&nbsp;&nbsp;looking&nbsp;at&nbsp;parent&nbsp;device&nbsp;<strong>‘</strong>/devices/pci0000:00/0000:00:1f.1/ide0<strong>‘</strong>:<br>&nbsp;&nbsp;&nbsp;&nbsp;KERNELS=<strong>=”</strong>ide0<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;SUBSYSTEMS=<strong>=””</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;DRIVERS=<strong>=””</strong><br><br>&nbsp;&nbsp;&nbsp;looking&nbsp;at&nbsp;parent&nbsp;device&nbsp;<strong>‘</strong>/devices/pci0000:00/0000:00:1f.1<strong>‘</strong>:<br>&nbsp;&nbsp;&nbsp;&nbsp;KERNELS=<strong>=”</strong>0000:00:1f.1<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;SUBSYSTEMS=<strong>=”</strong>pci<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;DRIVERS=<strong>=”</strong>PIIX_IDE<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{broken_parity_status}<strong>==”</strong>0<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{enable}<strong>==”</strong>1<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{modalias}<strong>==”</strong>pci:v00008086d000024CAsv0000144Dsd0000C009bc01sc01i8a<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{local_cpus}<strong>==”</strong>1<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{irq}<strong>==”</strong>11<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{class}<strong>==”</strong>0x01018a<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{subsystem_device}<strong>==”</strong>0xc009<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{subsystem_vendor}<strong>==”</strong>0x144d<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{device}<strong>==”</strong>0x24ca<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ATTRS{vendor}<strong>==”</strong>0x8086<strong>“</strong><br><br>&nbsp;&nbsp;&nbsp;looking&nbsp;at&nbsp;parent&nbsp;device&nbsp;<strong>‘</strong>/devices/pci0000:00<strong>‘</strong>:<br>&nbsp;&nbsp;&nbsp;&nbsp;KERNELS=<strong>=”</strong>pci0000:00<strong>“</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;SUBSYSTEMS=<strong>=””</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;DRIVERS=<strong>=””</strong><br><br></div>
+
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"><br>举 一个例子：假设你想修改USB扫描仪的配置。通过一系列的尝试，你已经为这个扫描仪标识了Linux设备文件(每次打开扫描仪时，名字都会变)。你可以使 用上面的命令替换这个正确的Linux设备文件名，然后定位输出的采用SYSFS{idVendor}行和SYSFS{idProduct}行。最后你可 以使用这些信息来为这个扫描仪创建新的选项。</span></span></span></p>
+<div class="msgborder" style="margin-top: 1em; margin-right: 0px; margin-bottom: 1em; margin-left: 0px; line-height: 28px; padding: 0px;"><br><pre>SYSFS{idVendor}<strong>==”</strong>0686<strong>“</strong>,&nbsp;<strong>\</strong><br>SYSFS{idProduct}<strong>==”</strong>400e<strong>“</strong>,&nbsp;<strong>\</strong><br>SYMLINK+=<strong>“</strong>scanner<strong>“</strong>,&nbsp;MODE=<strong>“</strong>0664<strong>“</strong>,&nbsp;<strong>\</strong><br>group=<strong>“</strong>scanner<strong>“</strong></pre><br></div>
+
+<p><span face="Arial" style="font-family: Arial;"><span class="Apple-style-span" style="line-height: 20px; -webkit-border-horizontal-spacing: 2px; -webkit-border-vertical-spacing: 2px;"><span class="Apple-style-span" style="color: #080000; font-family: Georgia, 'Times New Roman', serif; font-size: 19px; line-height: 28px; -webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: 0px;"><br>上面的例子表示将扫描仪的组设置为scanner，访问权限设置为0664,同时创建一个/dev/scanner的符号连接。</span></span></span></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2011/07/21/udev介绍/" data-id="cjs7p2wvn000eng5mqhn2ebpf" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2011/08/10/svn-tp-link-花生壳搭建外网服务器/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          svn+tp-link+花生壳搭建外网服务器
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2011/01/26/极大极小博弈树的简洁（附Tic-Tac-Toe源码）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">极大极小博弈树的简洁（附Tic-Tac-Toe源码）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">八月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/07/">七月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/12/">十二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/10/">十月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/04/">四月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/03/">三月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/04/">四月 2008</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/01/">一月 2008</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/15/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/30/QT项目性能调优小记/">QT项目性能调优小记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/28/Windows下HG服务器的搭建/">Windows下HG服务器的搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2011/08/10/svn-tp-link-花生壳搭建外网服务器/">svn+tp-link+花生壳搭建外网服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 三闻鱼<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
