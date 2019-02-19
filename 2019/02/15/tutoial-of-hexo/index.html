@@ -7,17 +7,17 @@
   
   <title>利用Hexo+Github搭建个人免费博客 | Submarine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言本篇blog将记录个人静态博客的搭建方法,包括：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法  GitHub静态博客是什么，为什么选择Hexo？GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免">
+  <meta name="description" content="前言本篇blog将记录个人静态博客的搭建方法,包括：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用Hexo+Github搭建个人免费博客">
 <meta property="og:url" content="http://yoursite.com/2019/02/15/tutoial-of-hexo/index.html">
 <meta property="og:site_name" content="Submarine">
-<meta property="og:description" content="前言本篇blog将记录个人静态博客的搭建方法,包括：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法  GitHub静态博客是什么，为什么选择Hexo？GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免">
+<meta property="og:description" content="前言本篇blog将记录个人静态博客的搭建方法,包括：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-17T14:34:59.000Z">
+<meta property="og:updated_time" content="2019-02-18T14:01:23.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用Hexo+Github搭建个人免费博客">
-<meta name="twitter:description" content="前言本篇blog将记录个人静态博客的搭建方法,包括：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法  GitHub静态博客是什么，为什么选择Hexo？GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免">
+<meta name="twitter:description" content="前言本篇blog将记录个人静态博客的搭建方法,包括：  Github静态博客是什么，为什么选择Hexo？ Hexo搭建过程 Hexo使用方法">
   
     <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
   
@@ -96,6 +96,7 @@
 <li>Hexo搭建过程</li>
 <li>Hexo使用方法</li>
 </ul>
+<a id="more"></a>
 <h1 id="GitHub静态博客是什么，为什么选择Hexo？"><a href="#GitHub静态博客是什么，为什么选择Hexo？" class="headerlink" title="GitHub静态博客是什么，为什么选择Hexo？"></a>GitHub静态博客是什么，为什么选择Hexo？</h1><p>GitHub作为全球最大的程序员交友网站，是一个代码托管平台和开发者社区，开发者可以在Github上创建自己的开源项目并与其他开发者协作编码，同时它也提供了很多服务，其中Pages就是其中一个服务，它提供了免费的托管空间可以用来存放静态博客站点的数据，使用GitHub Pages技术搭建静态博客站点的好处有：</p>
 <ul>
 <li>多达1G的免费空间。</li>
@@ -114,7 +115,7 @@
 <p>关于Hexo源代码的保存问题，可以参考<a href="https://www.jianshu.com/p/3c827e38a852" target="_blank" rel="noopener">保存Hexo博客源码到Github上</a>，创建一个新的分支，将代码存入新的分支中，保留master给GitHub Pages引擎用作渲染用。<br>在实际操作中，该文章中的一些git方法可以根据实际情况进行调整，这里需要掌握一些git的基本语法。</p>
 <h1 id="Hexo使用方法"><a href="#Hexo使用方法" class="headerlink" title="Hexo使用方法"></a>Hexo使用方法</h1><p>参考Hexo<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">帮助</a></p>
 <h2 id="文档结构"><a href="#文档结构" class="headerlink" title="文档结构"></a>文档结构</h2><p>安装完Hexo后的目录结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">├── source</span><br><span class="line">|   └── _posts</span><br><span class="line">└── themes</span><br><span class="line">└── public</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── _config.yml</span><br><span class="line">├── package.json</span><br><span class="line">├── scaffolds</span><br><span class="line">├── source</span><br><span class="line">|   └── _posts</span><br><span class="line">|   └── _drafts (自建添加)</span><br><span class="line">└── themes</span><br><span class="line">└── public</span><br></pre></td></tr></table></figure>
 <h3 id="config-yml"><a href="#config-yml" class="headerlink" title="_config.yml"></a>_config.yml</h3><p>用于记录网站的配置信息</p>
 <h3 id="package-json"><a href="#package-json" class="headerlink" title="package.json"></a>package.json</h3><p>node包的信息</p>
 <h3 id="scaffolds"><a href="#scaffolds" class="headerlink" title="scaffolds"></a>scaffolds</h3><p><strong>模版</strong> 文件夹。当您新建文章时，Hexo 会根据 scaffold 来建立文件。</p>
@@ -131,7 +132,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/02/15/tutoial-of-hexo/" data-id="cjs90p4x8000bwczscfcrglkm" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/02/15/tutoial-of-hexo/" data-id="cjsbxasc7001ly6zsq8xb5s4n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -140,19 +141,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/02/15/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Hello World
-        
-      </div>
-    </a>
   
-  
-    <a href="/2016/05/30/QT项目性能调优小记/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2009/10/31/从农夫养牛问题推广到斐波那契数列/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">QT项目性能调优小记</div>
+      <div class="article-nav-title">从农夫养牛问题推广到斐波那契数列</div>
     </a>
   
 </nav>
@@ -168,15 +160,29 @@
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"></ul>
+    </div>
+  </div>
+
 
   
     
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      
+    </div>
+  </div>
+
   
     
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">八月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/07/">七月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/12/">十二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/10/">十月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/01/">一月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/04/">四月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/03/">三月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/04/">四月 2008</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2008/01/">一月 2008</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li></ul>
     </div>
   </div>
 
@@ -189,23 +195,11 @@
       <ul>
         
           <li>
-            <a href="/2019/02/15/hello-world/">Hello World</a>
-          </li>
-        
-          <li>
             <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
           </li>
         
           <li>
-            <a href="/2016/05/30/QT项目性能调优小记/">QT项目性能调优小记</a>
-          </li>
-        
-          <li>
-            <a href="/2015/08/28/Windows下HG服务器的搭建/">Windows下HG服务器的搭建</a>
-          </li>
-        
-          <li>
-            <a href="/2011/08/10/svn-tp-link-花生壳搭建外网服务器/">svn+tp-link+花生壳搭建外网服务器</a>
+            <a href="/2009/10/31/从农夫养牛问题推广到斐波那契数列/">从农夫养牛问题推广到斐波那契数列</a>
           </li>
         
       </ul>
