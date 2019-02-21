@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>也谈线程同步变量 | Submarine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。 QMutex类的功能比较简单，主要分为Rec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="也谈线程同步变量">
+<meta property="og:url" content="http://yoursite.com/2010/04/08/也谈线程同步变量/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。 QMutex类的功能比较简单，主要分为Rec">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-21T15:03:18.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="也谈线程同步变量">
+<meta name="twitter:description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。 QMutex类的功能比较简单，主要分为Rec">
+  
+    <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Submarine</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">chinese submarine</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-也谈线程同步变量" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/04/08/也谈线程同步变量/" class="article-date">
+  <time datetime="2010-04-08T13:46:00.000Z" itemprop="datePublished">2010-04-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      也谈线程同步变量
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>　　前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。</p>
+<p>QT中主要提供了以下几个同步类：</p>
+<p>QMutex</p>
+<p>QSemaphore</p>
+<p>QWaitCondition</p>
+<p>QReadLocker</p>
+<p>QWriteLocker 等。</p>
+<p>下面就主要探讨一下前三个同步类。</p>
+<p><strong>QMutex类</strong>的功能比较简单，主要分为<strong>Recursive</strong>和<strong>N**</strong>on-Recursive**两种方式，Recursive模式即指在同一线程中可以对某个QMutex多次加锁，当然也要同等次数的解锁。而Non-Recursive即指QMutex只能被lock一次，否则视为死锁。下面重点介绍一下这两种模式的异同。</p>
+<p>　　在Recursive模式下需要记录第一次对其进行lock操作的线程id，即ownership（它的所属），如果是同一个线程，则对此Mutex再加一次锁，不会block当前的线程。如果是不同的线程，则需要block当前的线程，此外对该QMutex unlock的线程必须和lock的线程相同。</p>
+<p>　　在Non-Recursive模式下unlock的线程则不需要与lock的线程相同，在这点上有点类似于Semaphore。有的地方说Non-Recursive模式下的Mutex没有记录ownership，那么<em>我猜测<strong>Non-Recursive</strong>死锁的检测可能就是等待确定的时间，如果超过了该时间没有被解锁则判定为死锁，不知道这种猜测对不对，哪位知道的可以<strong>share</strong>一下</em>。通过查看QMutex的代码，发现QMutex版本的Mutex记录了线程的Ownership，所以在QMutex被二次加锁时能够立刻检查出死锁。</p>
+<p><strong>QSemaphore**</strong>类**提供对多个资源的保护，适用于生产者和消费者的模式。包括Acquire和Release方法。</p>
+<p><strong>QWaitCondition**</strong>类**，有些平台上也叫Monitor，提供了对多个条件的等待。下面是一个用条件变量实现的生产者和消费者的例子。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Producer::run()  </span><br><span class="line">&#123;  </span><br><span class="line">    qsrand(QTime(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>).secsTo(QTime::currentTime()));  </span><br><span class="line">     </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; DataSize; ++i) &#123;  </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        <span class="keyword">if</span> (numUsedBytes == BufferSize)  </span><br><span class="line">            <span class="comment">//缓冲区已满则等待  </span></span><br><span class="line">            bufferNotFull.wait(&amp;mutex);  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">   </span><br><span class="line">        buffer\[i % BufferSize\] =<span class="string">"ACGT"</span>\[(<span class="keyword">int</span>)qrand() %<span class="number">4</span>\];  </span><br><span class="line">   </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        ++numUsedBytes;  </span><br><span class="line">        <span class="comment">//生产完一个，唤醒因为缓冲区为空而等待的消费者  </span></span><br><span class="line">        bufferNotEmpty.wakeAll();  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">//! \[2\]  </span></span><br><span class="line">   </span><br><span class="line"><span class="comment">//! \[3\]  </span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> :</span> <span class="keyword">public</span> QThread  </span><br><span class="line"><span class="comment">//! \[3\] //! \[4\]  </span></span><br><span class="line">&#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;  </span><br><span class="line">&#125;;  </span><br><span class="line">   </span><br><span class="line"><span class="keyword">void</span> Consumer::run()  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; DataSize; ++i) &#123;  </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        <span class="keyword">if</span> (numUsedBytes ==<span class="number">0</span>)  </span><br><span class="line">            <span class="comment">//缓冲区为空，等待  </span></span><br><span class="line">            bufferNotEmpty.wait(&amp;mutex);  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">         </span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%c"</span>, buffer\[i % BufferSize\]);  </span><br><span class="line">   </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        --numUsedBytes;  </span><br><span class="line">        <span class="comment">//消费完一个，唤醒因为缓冲区满等待的消费者  </span></span><br><span class="line">        bufferNotFull.wakeAll();  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"\\n"</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由此看出WaitCondition是与一个条件联系在一起用的，常见的使用方法如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">While(<span class="literal">true</span>)  </span><br><span class="line">&#123;  </span><br><span class="line">    Do_something();  </span><br><span class="line">    Mutex.lock();  </span><br><span class="line">    If (condition)  </span><br><span class="line">        waitCondition.wati(mutex);  </span><br><span class="line">    Mutex.unlock();  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">While (<span class="literal">true</span>)  </span><br><span class="line">&#123;  </span><br><span class="line">    Do_something();  </span><br><span class="line">    Mutex.lock();  </span><br><span class="line">    Chang the condtion;  </span><br><span class="line">    waitCodtion.wake();  </span><br><span class="line">    Mutex.unlock();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Note：</strong>WaitCondition的wait的内部实现一般是先unlock传入的mutex，然后等待，收到信号后再对mutex进行lock操作。这样为编程提供了一些便利，下面将提到。</p>
+<p><strong>Semaphore**</strong>和<strong><strong>WaitCondition</strong></strong>的比较**</p>
+<p>下表总结了两者的不同 </p>
+<p><strong><em>Semaphores</em></strong></p>
+<blockquote>
+<p>Can be used anywhere in a program, but should not be used in a monitor</p>
+</blockquote>
+<blockquote>
+<p>Wait() does not always block the caller (<em>i.e.</em>, when the semaphore counter is greater than zero).</p>
+</blockquote>
+<blockquote>
+<p>Signal() either releases a blocked thread, if there is one, or increases the semaphore counter.</p>
+</blockquote>
+<blockquote>
+<p>If Signal() releases a blocked thread, the caller and the released thread <strong><em>both</em></strong> continue.</p>
+</blockquote>
+<p><strong><em>Condition Variables</em></strong></p>
+<blockquote>
+<p>Can only be used in monitors</p>
+</blockquote>
+<blockquote>
+<p>Wait() always blocks the caller.</p>
+</blockquote>
+<blockquote>
+<p>Signal() either releases a blocked thread, if there is one, or the signal is lost as if it never happens.</p>
+</blockquote>
+<blockquote>
+<p>If Signal() releases a blocked thread, the caller yields the monitor (Hoare type) or continues (Mesa Type). Only one of the caller or the released thread can continue, but not both.</p>
+</blockquote>
+<p>总得来说两者是可以互换的，比如WaitCondition虽然没有记录在它上面等待的个数，但是可以通过与一个整数联用来达到与Semaphore相同，如上面的例子中所示。据说WaitCondition内部也可以用Semaphore来实现的。</p>
+<p>此外在使用WaitCondition的时候要注意的是WaitCondition的wake方法在没有其他线程等待的情况下是不起作用的，所以在使用的时候要格外注意，下面是一个qt中的一个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">forever &#123;  </span><br><span class="line">     mutex.lock();  </span><br><span class="line">     keyPressed.wait(&amp;mutex);  </span><br><span class="line">     ++count;  </span><br><span class="line">     mutex.unlock();  </span><br><span class="line">   </span><br><span class="line">     do_something();  </span><br><span class="line">   </span><br><span class="line">     mutex.lock();  </span><br><span class="line">     --count;  </span><br><span class="line">     mutex.unlock();  </span><br><span class="line"> &#125;  </span><br><span class="line">forever &#123;  </span><br><span class="line">     getchar();  </span><br><span class="line">   </span><br><span class="line">     mutex.lock();  </span><br><span class="line">     <span class="comment">// Sleep until there are no busy worker threads  </span></span><br><span class="line"><span class="keyword">while</span> (count &gt;<span class="number">0</span>) &#123;  </span><br><span class="line">         mutex.unlock();  </span><br><span class="line">         sleep(<span class="number">1</span>);  </span><br><span class="line">         mutex.lock();  </span><br><span class="line">     &#125;  </span><br><span class="line">     keyPressed.wakeAll();  </span><br><span class="line">     mutex.unlock();  </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码通过添加一个count变量，防止在其他线程还在工作的情况下被唤醒。由于此处的mutex还用来保护count变量的同步，所以如果QWaitCondition在wait操作时没有对其unlock，那么在另一个线程中想对其操作，满足原来的条件的时候就会产生死锁。 </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/04/08/也谈线程同步变量/" data-id="cjserb4pm0001a7fy98pols5x" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2010/05/08/如何保持GUI的响应流畅-QT平台/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          如何保持GUI的响应流畅(QT平台)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/02/24/windows7到期的问题/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">windows7到期的问题</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
+          </li>
+        
+          <li>
+            <a href="/2011/01/26/极大极小博弈树的简洁（附Tic-Tac-Toe源码）/">极大极小博弈树的简介（附Tic-Tac-Toe源码）</a>
+          </li>
+        
+          <li>
+            <a href="/2011/01/19/程序优化小记/">程序优化小记</a>
+          </li>
+        
+          <li>
+            <a href="/2010/08/21/Tiled-地图编辑器分析（QT平台）/">Tiled 地图编辑器分析（QT平台）</a>
+          </li>
+        
+          <li>
+            <a href="/2010/05/08/如何保持GUI的响应流畅-QT平台/">如何保持GUI的响应流畅(QT平台)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 三闻鱼<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

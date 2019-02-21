@@ -176,6 +176,273 @@
 
 
   
+    <article id="post-程序优化小记" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2011/01/19/程序优化小记/" class="article-date">
+  <time datetime="2011-01-19T12:40:00.000Z" itemprop="datePublished">2011-01-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2011/01/19/程序优化小记/">程序优化小记</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（<a href="http://en.wikipedia.org/wiki/Run-length_encoding" title="http://en.wikipedia.org/wiki/Run-length_encoding" target="_blank" rel="noopener">http://en.wikipedia.org/wiki/Run-length_encoding</a>）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。</p>
+<p>&nbsp;</p>
+<table cellspacing="0" cellpadding="2" width="400" border="0"><br><tbody><br><tr><br><td valign="top" width="100">&nbsp;</td><br><td valign="top" width="100">压缩率</td><br><td valign="top" width="100">实现复杂度</td><br><td valign="top" width="100">内存占用量</td><br></tr><br><tr><br><td valign="top" width="100">霍夫曼算法</td><br><td valign="top" width="100">小</td><br><td valign="top" width="100">中</td><br><td valign="top" width="100">中</td><br></tr><br><tr><br><td valign="top" width="100">RLE算法</td><br><td valign="top" width="100">中</td><br><td valign="top" width="100">小</td><br><td valign="top" width="100">小</td><br></tr><br><tr><br><td valign="top" width="100">查表算法</td><br><td valign="top" width="100">大</td><br><td valign="top" width="100">大</td><br><td valign="top" width="100">大（一般几十K）</td><br></tr><br></tbody><br></table>
+
+<p>&nbsp;</p>
+<p>由于查表算法的内存占用量一般需要几十K，所以所以首先排除，而且比较霍夫曼算法和RLE算法，RLE算法在压缩率，实现复杂度，内存占用量三个方面都占有优势，所以最终选择RLE作为压缩和解码的方法。</p>
+<p>花了几天时间实现了改算法，今天对其进行了性能测试，发现解压目标数据需要200多ms，遂决定对其进行优化。</p>
+<p><strong>step1</strong>，还原行解压函数，减少一百多次的函数调用，但是实验的结果是反而增加了100多ms，猜测可能是有远指针调用，遂放弃。</p>
+<p><strong>step2</strong>，将行解压函数中，对堆内存的访问换成对栈上数据的访问，实验下来时间减小到了70-80ms，性能提升了一倍多。</p>
+<p><strong>step3</strong>，由于采用的RLE算法是经过改进过的，n + 1行的数据是和n行数据异或过，所以增加相同数据的几率，比如有三行数据时1010 1010，理论上是不能压缩的，当时经过异或，后面两行数据都变成了0000 0000，便可以采用RLE算法进行压缩。所以根据这一特性，在step3做的优化是，比较解压出的值，如果是0，则不需要和上一行的数据进行异或（因为任何数和零异或都不变）。改进后可以将时间减小到30-40ms，又提升了一倍多。</p>
+<p><strong>step4</strong>，在step3的基础，在行解压算法中，如果检测到行的剩余部分都是0，则直接跳过该行剩下的部分。改进后时间减小到了十几个ms。</p>
+<p>所以进过step2-4，性能提升了10倍多。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2011/01/19/程序优化小记/" data-id="cjserb4qu0004a7fyoqcgmo2i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Tiled-地图编辑器分析（QT平台）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/08/21/Tiled-地图编辑器分析（QT平台）/" class="article-date">
+  <time datetime="2010-08-21T01:16:00.000Z" itemprop="datePublished">2010-08-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/08/21/Tiled-地图编辑器分析（QT平台）/">Tiled 地图编辑器分析（QT平台）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Tiled 是一款地图编辑软件，它的网址是：<a href="http://www.mapeditor.org/" target="_blank" rel="noopener">http://www.mapeditor.org/</a>（ 不过好像要用代理才能访问）。Wiki的网址是：<a href="http://sourceforge.net/apps/mediawiki/tiled/index.php?title=Main_Page" title="Main_Page" target="_blank" rel="noopener">http://sourceforge.net/apps/mediawiki/tiled/index.php?title=Main_Page</a>。它的上一版是用Jave实现，有兴趣的也可以去看一下。</p>
+<p>&nbsp;</p>
+<h2 id="Tiled现在包含的功能有："><a href="#Tiled现在包含的功能有：" class="headerlink" title="Tiled现在包含的功能有："></a>Tiled现在包含的功能有：</h2><ol>
+<li><strong><font color="#000080">General purpose tile map editor with XML-based map format</font></strong>  </li><li>Supports orthogonal and isometric maps  </li><li>Custom objects can be placed with pixel precision  </li><li><strong><font color="#000080">Full undo/redo and copy/paste support</font></strong>  </li><li>Add custom properties to tiles, layers, objects or the map  </li><li>Automatically reloads tilesets when changed externally  </li><li>Resize or offset your tile map later as needed  </li><li>Efficient tile editing tools like stamp and fill brushes  </li><li>Supports input/output plugins to open and save files in custom formats </li>
+</ol>
+<p>本文将重点描述Tiled的整体结构，以及1, 4功能的实现（本文分析的是它的0.1版）。</p>
+<p>&nbsp;</p>
+<h2 id="开发环境的搭建"><a href="#开发环境的搭建" class="headerlink" title="开发环境的搭建"></a>开发环境的搭建</h2><p>首先从<a href="http://sourceforge.net/projects/tiled/" target="_blank" rel="noopener">http://sourceforge.net/projects/tiled/</a> 上下载最新的源码。</p>
+<p>用<a href="http://qt.nokia.com/products/developer-tools" target="_blank" rel="noopener">Qt Creator</a>打开源码中的pro文件。</p>
+<p>下载zlib库，地址：<a href="http://www.zlib.net/" target="_blank" rel="noopener">http://www.zlib.net/</a>。</p>
+<p>打开src下面的<strong>src.pro</strong>, 加入对zlib的引用：</p>
+<blockquote>
+<p>INCLUDEPATH += “D:\Program Files\GnuWin32\include”  </p><p>LIBS += -L”D:\Program Files\GnuWin32\lib” \<br>&nbsp;&nbsp;&nbsp; -lzlib </p>
+</blockquote>
+<p>点击build，泡杯茶回来便可看到程序的运行画面了，如下所示：  </p><p><a href="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_shotsnap_2.png" target="_blank" rel="noopener"><img src="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_shotsnap_thumb.png" alt="tiled_shotsnap" title="tiled_shotsnap"></a>  </p><p><strong>Note：</strong>源代码所在文件夹的路径中不能出现中文，否则编译会出错。</p>
+<p>Tiled的使用说明可以参考如下两篇文章：</p>
+<p><a href="http://silveiraneto.net/2009/01/11/game-map-edition-using-tiled/" target="_blank" rel="noopener">http://silveiraneto.net/2009/01/11/game-map-edition-using-tiled/</a></p>
+<p><a href="http://www.raywenderlich.com/1163/how-to-make-a-tile-based-game-with-cocos2d" target="_blank" rel="noopener">http://www.raywenderlich.com/1163/how-to-make-a-tile-based-game-with-cocos2d</a></p>
+<p>&nbsp;</p>
+<h2 id="整体结构的介绍"><a href="#整体结构的介绍" class="headerlink" title="整体结构的介绍"></a>整体结构的介绍</h2><p>QT窗口的结构如下所示</p>
+<p><a href="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_view_struct_2.png" target="_blank" rel="noopener"><img src="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_view_struct_thumb.png" alt="tiled_view_struct" title="tiled_view_struct"></a> </p>
+<p>先说左边三个窗口：</p>
+<p>层管理窗口：可以把层次分类进行管理，如建筑物和植物可以定义到不同的层次。</p>
+<p>历史管理窗口：可以查看和撤销之前的操作。</p>
+<p>色块管理窗口：显示外界导入的tileset，可以添加到客户区中。</p>
+<p>这三个窗口利用QT的QDockWidget实现，所以默认具有停靠，移动的功能。</p>
+<p>&nbsp;</p>
+<p>再说左边的客户区，可以编辑map，这块是利用QT的GraphicsView图形引擎完成的，关于GraphicsView的介绍可以参考：</p>
+<p><a href="http://doc.qt.nokia.com/4.6/graphicsview.html" target="_blank" rel="noopener">http://doc.qt.nokia.com/4.6/graphicsview.html</a>，对应到代码中就是MapView。</p>
+<p>&nbsp;</p>
+<p>下面看一下MainWindow类是如何管理这几个窗口的。</p>
+<p><a href="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/TiledQT_EC02/Creek_2.jpg" target="_blank" rel="noopener"><img src="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/TiledQT_EC02/Creek_thumb.jpg" alt="Creek" title="Creek"></a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/08/21/Tiled-地图编辑器分析（QT平台）/" data-id="cjserb4pj0000a7fyuy8qkemp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-如何保持GUI的响应流畅-QT平台" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/05/08/如何保持GUI的响应流畅-QT平台/" class="article-date">
+  <time datetime="2010-05-08T03:17:00.000Z" itemprop="datePublished">2010-05-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/05/08/如何保持GUI的响应流畅-QT平台/">如何保持GUI的响应流畅(QT平台)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>#引子</p>
+<p>一般来说耗时较长的操作，分为计算密集型操作和IO密集型操作，对于这两类操作如何提高响应速度呢？ </p>
+<p>而从操作的本质上来说，操作又可分为不可分解操作，如在第三方库中耗时较长的操作，以及可分解操作，其中可分解操作又可细分为串行操作和可并行操作，如何针对这几类操作来提高响应速度呢？ </p>
+<p>如何将异步的操作，如网络库中异步的读取数据方法，变成同步的操作？ </p>
+<p>此外对于多线程，普遍的看法是可以提供程序的运行速度，其实不然，不正确地使用线程常常会使程序变慢，那么在QT中是否可以通过多线程以外的方法来提高响应速度呢？ </p>
+<p>下文将一一解答这些问题。 </p>
+<p>&nbsp;</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>首先什么是对GUI的响应？答：GUI的响应就是系统对于GUI事件的处理速度。 </p>
+<p>由于系统处理事件需要一定的时间，所以一般窗口系统都会提供一个事件队列来存储事件。如果把每个事件处理看成一个任务的话，那么事件处理就类似于操作系统对于任务按照优先级进行处理，使得每个任务的平均等待时间最小。那么就可以借鉴一下操作系统中的方法，比如： </p>
+<blockquote>
+<p>分级，让较长的任务延后执行。 </p>
+<p>分时，对于较长的任务，让其执行一段时间后暂停，然后再执行。 </p>
+<p>减少每个任务运行的耗时，当然这是最基本的方法。</p>
+</blockquote>
+<p>先看第一个分级，当一个事件处理程序知道自己将执行耗时很长的操作时，可以调用<a href="http://doc.trolltech.com/latest/qcoreapplication.html%22%20target=%22_blank#processEvents" target="_blank" rel="noopener">QCoreApplication::processEvents()</a> 方法，等待消息队列中的方法都执行完再执行。当然这是一个最基本的方法，只适用与简单的情况，如果事件队列中的另一程序也调用了该方法则会出现死锁。 </p>
+<p>&nbsp;</p>
+<p>再看分时，它适用于可分解的操作（包括串行操作和并行操作），只需记录当前任务的执行情况，然后可以再次执行。它的使用流程如下： </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Function <span class="title">EventHandler</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//开始计时</span></span><br><span class="line">    While(执行时间 &lt; 用户可接受的响应时间)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//执行操作</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//注册系统空闲事件以继续处理</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在QT中注册系统空闲事件的方法可以通过QTimer::singleShot(0, this, SLOT(calculate()));将系统空闲信号注册到自己的槽中。或者使用QMetaObject::invokeMethod(this, “calculate”, Qt::QueuedConnection);方法，通过invokeMethod异步的执行某个方法。 </p>
+<p>&nbsp;</p>
+<p>最后重点看一下如何减少响应的时间，对于数据密集型操作，推荐使用ThreadPool来管理，减少线程上下文切换的时间；而对于IO密集型操作，则自己管理一个thread来实现，而这也是我认为thread最应该使用的情景，即让CPU和外设都处于满负荷运转状态，减少总的操作时间。 </p>
+<p>&nbsp;</p>
+<p>对于并行操作响应时间的减少，在QT中引入了Qt Concurrent的概念，采用<a href="http://en.wikipedia.org/wiki/MapReduce" target="_blank" rel="noopener">Map/Reduce</a>的方式，具体可以参考QT中的<a href="http://doc.trolltech.com/4.6/threads-qtconcurrent.html" target="_blank" rel="noopener">Concurrent Programming</a>节。 </p>
+<p>&nbsp;</p>
+<p>最后再解答下如何在QT中将异步操作改成同步操作的方法，这个就属于QT special的内容，一般的读者可以跳过。 </p>
+<p>具体的代码如下所示： </p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">QNetworkAccessManager manager;</span><br><span class="line">QEventLoop q;</span><br><span class="line">QTimer tT;</span><br><span class="line"> </span><br><span class="line">tT.setSingleShot(<span class="literal">true</span>);</span><br><span class="line">connect(&amp;tT, SIGNAL(timeout()), &amp;q, SLOT(quit()));</span><br><span class="line">connect(&amp;manager, SIGNAL(finished(QNetworkReply*)),</span><br><span class="line">        &amp;q, SLOT(quit()));</span><br><span class="line">QNetworkReply *reply = manager.get(QNetworkRequest(QUrl(<span class="string">"http://www.qtcentre.org"</span>)));</span><br><span class="line"> </span><br><span class="line">tT.start(<span class="number">5000</span>); <span class="comment">// 5s timeout</span></span><br><span class="line">q.exec();</span><br><span class="line"> </span><br><span class="line"><span class="keyword">if</span>(tT.isActive())&#123;</span><br><span class="line">    <span class="comment">// download complete</span></span><br><span class="line">    tT.stop();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// timeout</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中主要利用了QEventLoop类，它将创建一个本地的Event loop，然后block，直到接受到finished信号，或者timeout超时信号后才退出，而事件循环则不会被block。 </p>
+<p>&nbsp;</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文分析了影响GUI响应速度的原因，通过类比操作系统对任务的优先级分派方式，探讨了对多种事件类型，提高其响应速度的方法，其中有些方法在其它平台也是通用的。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/05/08/如何保持GUI的响应流畅-QT平台/" data-id="cjserb4po0003a7fyo4e9co4n" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-也谈线程同步变量" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/04/08/也谈线程同步变量/" class="article-date">
+  <time datetime="2010-04-08T13:46:00.000Z" itemprop="datePublished">2010-04-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2010/04/08/也谈线程同步变量/">也谈线程同步变量</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>　　前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。</p>
+<p>QT中主要提供了以下几个同步类：</p>
+<p>QMutex</p>
+<p>QSemaphore</p>
+<p>QWaitCondition</p>
+<p>QReadLocker</p>
+<p>QWriteLocker 等。</p>
+<p>下面就主要探讨一下前三个同步类。</p>
+<p><strong>QMutex类</strong>的功能比较简单，主要分为<strong>Recursive</strong>和<strong>N**</strong>on-Recursive**两种方式，Recursive模式即指在同一线程中可以对某个QMutex多次加锁，当然也要同等次数的解锁。而Non-Recursive即指QMutex只能被lock一次，否则视为死锁。下面重点介绍一下这两种模式的异同。</p>
+<p>　　在Recursive模式下需要记录第一次对其进行lock操作的线程id，即ownership（它的所属），如果是同一个线程，则对此Mutex再加一次锁，不会block当前的线程。如果是不同的线程，则需要block当前的线程，此外对该QMutex unlock的线程必须和lock的线程相同。</p>
+<p>　　在Non-Recursive模式下unlock的线程则不需要与lock的线程相同，在这点上有点类似于Semaphore。有的地方说Non-Recursive模式下的Mutex没有记录ownership，那么<em>我猜测<strong>Non-Recursive</strong>死锁的检测可能就是等待确定的时间，如果超过了该时间没有被解锁则判定为死锁，不知道这种猜测对不对，哪位知道的可以<strong>share</strong>一下</em>。通过查看QMutex的代码，发现QMutex版本的Mutex记录了线程的Ownership，所以在QMutex被二次加锁时能够立刻检查出死锁。</p>
+<p><strong>QSemaphore**</strong>类**提供对多个资源的保护，适用于生产者和消费者的模式。包括Acquire和Release方法。</p>
+<p><strong>QWaitCondition**</strong>类**，有些平台上也叫Monitor，提供了对多个条件的等待。下面是一个用条件变量实现的生产者和消费者的例子。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> Producer::run()  </span><br><span class="line">&#123;  </span><br><span class="line">    qsrand(QTime(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>).secsTo(QTime::currentTime()));  </span><br><span class="line">     </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; DataSize; ++i) &#123;  </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        <span class="keyword">if</span> (numUsedBytes == BufferSize)  </span><br><span class="line">            <span class="comment">//缓冲区已满则等待  </span></span><br><span class="line">            bufferNotFull.wait(&amp;mutex);  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">   </span><br><span class="line">        buffer\[i % BufferSize\] =<span class="string">"ACGT"</span>\[(<span class="keyword">int</span>)qrand() %<span class="number">4</span>\];  </span><br><span class="line">   </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        ++numUsedBytes;  </span><br><span class="line">        <span class="comment">//生产完一个，唤醒因为缓冲区为空而等待的消费者  </span></span><br><span class="line">        bufferNotEmpty.wakeAll();  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="comment">//! \[2\]  </span></span><br><span class="line">   </span><br><span class="line"><span class="comment">//! \[3\]  </span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> :</span> <span class="keyword">public</span> QThread  </span><br><span class="line"><span class="comment">//! \[3\] //! \[4\]  </span></span><br><span class="line">&#123;  </span><br><span class="line"><span class="keyword">public</span>:  </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;  </span><br><span class="line">&#125;;  </span><br><span class="line">   </span><br><span class="line"><span class="keyword">void</span> Consumer::run()  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; DataSize; ++i) &#123;  </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        <span class="keyword">if</span> (numUsedBytes ==<span class="number">0</span>)  </span><br><span class="line">            <span class="comment">//缓冲区为空，等待  </span></span><br><span class="line">            bufferNotEmpty.wait(&amp;mutex);  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">         </span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"%c"</span>, buffer\[i % BufferSize\]);  </span><br><span class="line">   </span><br><span class="line">        mutex.lock();  </span><br><span class="line">        --numUsedBytes;  </span><br><span class="line">        <span class="comment">//消费完一个，唤醒因为缓冲区满等待的消费者  </span></span><br><span class="line">        bufferNotFull.wakeAll();  </span><br><span class="line">        mutex.unlock();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"\\n"</span>);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由此看出WaitCondition是与一个条件联系在一起用的，常见的使用方法如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">While(<span class="literal">true</span>)  </span><br><span class="line">&#123;  </span><br><span class="line">    Do_something();  </span><br><span class="line">    Mutex.lock();  </span><br><span class="line">    If (condition)  </span><br><span class="line">        waitCondition.wati(mutex);  </span><br><span class="line">    Mutex.unlock();  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">While (<span class="literal">true</span>)  </span><br><span class="line">&#123;  </span><br><span class="line">    Do_something();  </span><br><span class="line">    Mutex.lock();  </span><br><span class="line">    Chang the condtion;  </span><br><span class="line">    waitCodtion.wake();  </span><br><span class="line">    Mutex.unlock();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Note：</strong>WaitCondition的wait的内部实现一般是先unlock传入的mutex，然后等待，收到信号后再对mutex进行lock操作。这样为编程提供了一些便利，下面将提到。</p>
+<p><strong>Semaphore**</strong>和<strong><strong>WaitCondition</strong></strong>的比较**</p>
+<p>下表总结了两者的不同 </p>
+<p><strong><em>Semaphores</em></strong></p>
+<blockquote>
+<p>Can be used anywhere in a program, but should not be used in a monitor</p>
+</blockquote>
+<blockquote>
+<p>Wait() does not always block the caller (<em>i.e.</em>, when the semaphore counter is greater than zero).</p>
+</blockquote>
+<blockquote>
+<p>Signal() either releases a blocked thread, if there is one, or increases the semaphore counter.</p>
+</blockquote>
+<blockquote>
+<p>If Signal() releases a blocked thread, the caller and the released thread <strong><em>both</em></strong> continue.</p>
+</blockquote>
+<p><strong><em>Condition Variables</em></strong></p>
+<blockquote>
+<p>Can only be used in monitors</p>
+</blockquote>
+<blockquote>
+<p>Wait() always blocks the caller.</p>
+</blockquote>
+<blockquote>
+<p>Signal() either releases a blocked thread, if there is one, or the signal is lost as if it never happens.</p>
+</blockquote>
+<blockquote>
+<p>If Signal() releases a blocked thread, the caller yields the monitor (Hoare type) or continues (Mesa Type). Only one of the caller or the released thread can continue, but not both.</p>
+</blockquote>
+<p>总得来说两者是可以互换的，比如WaitCondition虽然没有记录在它上面等待的个数，但是可以通过与一个整数联用来达到与Semaphore相同，如上面的例子中所示。据说WaitCondition内部也可以用Semaphore来实现的。</p>
+<p>此外在使用WaitCondition的时候要注意的是WaitCondition的wake方法在没有其他线程等待的情况下是不起作用的，所以在使用的时候要格外注意，下面是一个qt中的一个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">forever &#123;  </span><br><span class="line">     mutex.lock();  </span><br><span class="line">     keyPressed.wait(&amp;mutex);  </span><br><span class="line">     ++count;  </span><br><span class="line">     mutex.unlock();  </span><br><span class="line">   </span><br><span class="line">     do_something();  </span><br><span class="line">   </span><br><span class="line">     mutex.lock();  </span><br><span class="line">     --count;  </span><br><span class="line">     mutex.unlock();  </span><br><span class="line"> &#125;  </span><br><span class="line">forever &#123;  </span><br><span class="line">     getchar();  </span><br><span class="line">   </span><br><span class="line">     mutex.lock();  </span><br><span class="line">     <span class="comment">// Sleep until there are no busy worker threads  </span></span><br><span class="line"><span class="keyword">while</span> (count &gt;<span class="number">0</span>) &#123;  </span><br><span class="line">         mutex.unlock();  </span><br><span class="line">         sleep(<span class="number">1</span>);  </span><br><span class="line">         mutex.lock();  </span><br><span class="line">     &#125;  </span><br><span class="line">     keyPressed.wakeAll();  </span><br><span class="line">     mutex.unlock();  </span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码通过添加一个count变量，防止在其他线程还在工作的情况下被唤醒。由于此处的mutex还用来保护count变量的同步，所以如果QWaitCondition在wait操作时没有对其unlock，那么在另一个线程中想对其操作，满足原来的条件的时候就会产生死锁。 </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/04/08/也谈线程同步变量/" data-id="cjserb4pm0001a7fy98pols5x" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-windows7到期的问题" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2010/02/24/windows7到期的问题/" class="article-date">
@@ -330,10 +597,10 @@
 
 
   
-    <article id="post-WPF中Dependency属性设置顺序的心得" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-TimeZoneChange事件的捕获" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2009/02/10/WPF中Dependency属性设置顺序的心得/" class="article-date">
-  <time datetime="2009-02-10T09:51:00.000Z" itemprop="datePublished">2009-02-10</time>
+    <a href="/2009/08/08/TimeZoneChange事件的捕获/" class="article-date">
+  <time datetime="2009-08-08T05:03:00.000Z" itemprop="datePublished">2009-08-08</time>
 </a>
     
   </div>
@@ -344,7 +611,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2009/02/10/WPF中Dependency属性设置顺序的心得/">WPF中Dependency属性设置顺序的心得</a>
+      <a class="article-title" href="/2009/08/08/TimeZoneChange事件的捕获/">TimeZoneChange事件的捕获</a>
     </h1>
   
 
@@ -352,32 +619,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>今天在学习WPF依赖属性的时候做了一个很经典的例子，即通过XMAL中的Trigger来改变按钮的前景色。具体代码如下：</p>
-<p>Code</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Button</span>&gt;</span></span><br><span class="line">            OK</span><br><span class="line">            <span class="tag">&lt;<span class="name">Button.Style</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Style</span> <span class="attr">TargetType</span>=<span class="string">"&#123;x:Type Button&#125;"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">Style.Triggers</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">Trigger</span> <span class="attr">Property</span>=<span class="string">"IsMouseOver"</span> <span class="attr">Value</span>=<span class="string">"True"</span>&gt;</span></span></span><br><span class="line"><span class="xml">                            <span class="tag">&lt;<span class="name">Setter</span> <span class="attr">Property</span>=<span class="string">"Foreground"</span> <span class="attr">Value</span>=<span class="string">"Blue"</span>&gt;</span><span class="tag">&lt;/<span class="name">Setter</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;/<span class="name">Trigger</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">Style.Triggers</span>&gt;</span></span></span><br><span class="line"><span class="undefined">                </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">Button.Style</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">可以很好的实现，将鼠标移至按钮上，然后按钮的前景色变为蓝色的功能。</span><br><span class="line"></span><br><span class="line">但是尝试给此按钮设置一个Foreground属性，代码：</span><br><span class="line"></span><br><span class="line"> </span><br><span class="line">```xml</span><br><span class="line"><span class="tag">&lt;<span class="name">Button</span>  <span class="attr">Foreground</span>=<span class="string">"Black"</span>&gt;</span></span><br><span class="line">            OK</span><br><span class="line">            <span class="tag">&lt;<span class="name">Button.Style</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">Style</span> <span class="attr">TargetType</span>=<span class="string">"&#123;x:Type Button&#125;"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">Style.Triggers</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;<span class="name">Trigger</span> <span class="attr">Property</span>=<span class="string">"IsMouseOver"</span> <span class="attr">Value</span>=<span class="string">"True"</span>&gt;</span></span></span><br><span class="line"><span class="xml">                            <span class="tag">&lt;<span class="name">Setter</span> <span class="attr">Property</span>=<span class="string">"Foreground"</span> <span class="attr">Value</span>=<span class="string">"Blue"</span>&gt;</span><span class="tag">&lt;/<span class="name">Setter</span>&gt;</span></span></span><br><span class="line"><span class="xml">                        <span class="tag">&lt;/<span class="name">Trigger</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;/<span class="name">Style.Triggers</span>&gt;</span></span></span><br><span class="line"><span class="undefined">                </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">Button.Style</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">Button</span></span></span><br></pre></td></tr></table></figure>
-<p>则使Trigger设置前者色的作用失效了。于是这便使我联想到这几天看到的一篇Dependency属性计算顺序的文章</p>
-<p>（<a href="http://www.cnblogs.com/YilingLai/archive/2006/12/25/602889.html）" target="_blank" rel="noopener">http://www.cnblogs.com/YilingLai/archive/2006/12/25/602889.html）</a></p>
-<p>原来在第一步计算基础值的时，系统是按照下面的优先级来计算Dependency属性的值的：</p>
-<p>1、Local Value                  </p>
-<p>2、Style Triggers              </p>
-<p>3、Template Triggers                   </p>
-<p>4、Style Setters </p>
-<p>5、Theme Style Triggers    </p>
-<p>6、Theme Style Setters     </p>
-<p>7、Property Value Inheritance      </p>
-<p>8、Default Value</p>
-<p>因为Foreground=”Black”属于Local Value，比Style Triggers的优先级要高，所以在计算过程中</p>
-<p>它掩盖了Style Triggers对Foreground属性值的作用。</p>
-<p>那么既需要设置Foreground同时也需要通过设置Trigger来改变它怎么做呢？</p>
-<p>答案就是如下面代码所示：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Window.Resources</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Style</span> <span class="attr">TargetType</span>=<span class="string">"&#123;x:Type Button&#125;"</span> <span class="attr">x:Key</span>=<span class="string">"changeColorStyle"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;<span class="name">Style.Triggers</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;<span class="name">Trigger</span> <span class="attr">Property</span>=<span class="string">"IsMouseOver"</span> <span class="attr">Value</span>=<span class="string">"True"</span>&gt;</span></span></span><br><span class="line"><span class="xml">                    <span class="tag">&lt;<span class="name">Setter</span> <span class="attr">Property</span>=<span class="string">"Foreground"</span> <span class="attr">Value</span>=<span class="string">"Blue"</span>&gt;</span><span class="tag">&lt;/<span class="name">Setter</span>&gt;</span></span></span><br><span class="line"><span class="xml">                <span class="tag">&lt;/<span class="name">Trigger</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;/<span class="name">Style.Triggers</span>&gt;</span></span></span><br><span class="line"><span class="xml">            <span class="tag">&lt;<span class="name">Setter</span> <span class="attr">Property</span>=<span class="string">"Foreground"</span> <span class="attr">Value</span>=<span class="string">"Black"</span>&gt;</span><span class="tag">&lt;/<span class="name">Setter</span>&gt;</span></span></span><br><span class="line"><span class="undefined">        </span><span class="tag">&lt;/<span class="name">Style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Window.Resources</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">StackPanel</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Button</span> <span class="attr">Style</span>=<span class="string">"&#123;StaticResource changeColorStyle&#125;"</span>&gt;</span></span><br><span class="line">            OK</span><br><span class="line">        <span class="tag">&lt;/<span class="name">Button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">StackPanel</span></span></span><br></pre></td></tr></table></figure>
-<p>将Style提取到Window.Resources中，然后使此Button引用此资源。</p>
-<p>因为在计算基础值的顺序时,Style Triggers排在第二，而Style Setter则排在第四的位置上。</p>
-
+        <p>#需求：<br>在c#中要捕获TimeZone变化的事件。 </p>
+<p>经过简单的分析发现，c#中没有直接捕获TimeZone Change的事件，但是通过google搜索时，发现一个SystemEvents类提供了许多系统属性变化的时间，其中有一个就是TimeChange事件。考虑到TimeZone带来的附加效果就是Time的变化，所以在此利用了TimeChange事件，来捕获TimeZoneChange事件，具体的代码如下： </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">TimeEvents</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> TimeZoneInfo PreviousTimeZone;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">event</span> EventHandler TimeZoneChangedEvent;</span><br><span class="line">     <span class="function"><span class="keyword">static</span> <span class="title">TimeEvents</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        PreviousTimeZone = TimeZoneInfo.Local;</span><br><span class="line">        Microsoft.Win32.SystemEvents.TimeChanged += OnTimeChanged;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnTimeChanged</span>(<span class="params"><span class="keyword">object</span> sender, EventArgs e</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();</span><br><span class="line">        TimeZoneInfo.ClearCachedData();</span><br><span class="line">        <span class="keyword">if</span> (TimeZoneInfo.Local != PreviousTimeZone)</span><br><span class="line">        &#123;</span><br><span class="line">            OnTimeZoneChanged();</span><br><span class="line">            PreviousTimeZone = TimeZoneInfo.Local;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnTimeZoneChanged</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> != TimeZoneChangedEvent)</span><br><span class="line">        &#123;</span><br><span class="line">            TimeZoneChangedEvent(<span class="keyword">new</span> TimeEvents(), EventArgs.Empty);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>#Remarks： </p>
+<p>由于TimeZoneInfo对象使用了缓存机制，即它会将获得的TimeZoneInfo缓存起来，在用户请求当前时区属性（Local）时，直接返回缓存的TimeZone，而不重新获取新的TimeZone，所以在获取新的TimeZone属性时，需要先清空Culture和TImeZone的缓存，如下所示： </p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();</span><br><span class="line">TimeZoneInfo.ClearCachedData();</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2009/02/10/WPF中Dependency属性设置顺序的心得/" data-id="cjsd9sii40000kszsyvu5d1x9" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2009/08/08/TimeZoneChange事件的捕获/" data-id="cjserb4pn0002a7fyxjv3epg0" class="article-share-link">Share</a>
       
       
     </footer>
@@ -388,6 +639,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页 &raquo;</a>
+  </nav>
 
 </section>
         
@@ -419,7 +675,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li></ul>
     </div>
   </div>
 
@@ -440,15 +696,15 @@
           </li>
         
           <li>
-            <a href="/2010/02/24/windows7到期的问题/">windows7到期的问题</a>
+            <a href="/2011/01/19/程序优化小记/">程序优化小记</a>
           </li>
         
           <li>
-            <a href="/2010/02/04/简述FPS的计算方法/">简述FPS的计算方法</a>
+            <a href="/2010/08/21/Tiled-地图编辑器分析（QT平台）/">Tiled 地图编辑器分析（QT平台）</a>
           </li>
         
           <li>
-            <a href="/2009/10/31/从农夫养牛问题推广到斐波那契数列/">从农夫养牛问题推广到斐波那契数列</a>
+            <a href="/2010/05/08/如何保持GUI的响应流畅-QT平台/">如何保持GUI的响应流畅(QT平台)</a>
           </li>
         
       </ul>
