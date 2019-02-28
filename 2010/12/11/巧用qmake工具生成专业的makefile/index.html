@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>巧用qmake工具生成专业的makefile | Submarine</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="问题描述 一般来说在Linux下编程写个测试程序，都需要制作一个makefile文件，但是如果自己手动编写每个还是比较麻烦，而且看上去也不太专业。而如果用autoconf工具生成也还是需要加入一些手动操作，也不是很方便。 解决方法 利用QT程序里的qmake工具，qmake工具是QT 开发环境中的工具，它可以根据文件夹下的文件生成.pro文件，这个文件类似于vs的.vcproject，然后再根据这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="巧用qmake工具生成专业的makefile">
+<meta property="og:url" content="http://yoursite.com/2010/12/11/巧用qmake工具生成专业的makefile/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="问题描述 一般来说在Linux下编程写个测试程序，都需要制作一个makefile文件，但是如果自己手动编写每个还是比较麻烦，而且看上去也不太专业。而如果用autoconf工具生成也还是需要加入一些手动操作，也不是很方便。 解决方法 利用QT程序里的qmake工具，qmake工具是QT 开发环境中的工具，它可以根据文件夹下的文件生成.pro文件，这个文件类似于vs的.vcproject，然后再根据这">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-02-22T13:38:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="巧用qmake工具生成专业的makefile">
+<meta name="twitter:description" content="问题描述 一般来说在Linux下编程写个测试程序，都需要制作一个makefile文件，但是如果自己手动编写每个还是比较麻烦，而且看上去也不太专业。而如果用autoconf工具生成也还是需要加入一些手动操作，也不是很方便。 解决方法 利用QT程序里的qmake工具，qmake工具是QT 开发环境中的工具，它可以根据文件夹下的文件生成.pro文件，这个文件类似于vs的.vcproject，然后再根据这">
+  
+    <link rel="alternate" href="/atom.xml" title="Submarine" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Submarine</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">chinese submarine</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-巧用qmake工具生成专业的makefile" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2010/12/11/巧用qmake工具生成专业的makefile/" class="article-date">
+  <time datetime="2010-12-11T03:58:00.000Z" itemprop="datePublished">2010-12-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      巧用qmake工具生成专业的makefile
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>问题描述</strong></p>
+<p>一般来说在Linux下编程写个测试程序，都需要制作一个makefile文件，但是如果自己手动编写每个还是比较麻烦，而且看上去也不太专业。而如果用autoconf工具生成也还是需要加入一些手动操作，也不是很方便。</p>
+<p><strong>解决方法</strong></p>
+<p>利用QT程序里的qmake工具，qmake工具是QT 开发环境中的工具，它可以根据文件夹下的文件生成.pro文件，这个文件类似于vs的.vcproject，然后再根据这个.pro文件生成makefile文件。</p>
+<p><strong>操作步骤</strong></p>
+<p>安装qmake工具</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install qt4-qmake</span><br></pre></td></tr></table></figure>
+<p><span style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12pt;"><span style="font-size: 13px; line-height: 19px; white-space: pre;">在src文件夹下执行</span></span></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qmake -project --生成.pro文件 qmake --根据.pro文件生成makefile make</span><br></pre></td></tr></table></figure>
+<p>&nbsp;</p>
+<p><strong>注意</strong></p>
+<p>由于qmake是QT的工具，所以它会在.pro中加入qt的几个默认库，如果你不想下载这些库，可以在.pro文件中添加加下面两句，去除对默认库的引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CONFIG -= qt QT -= gui core</span><br></pre></td></tr></table></figure>
+<p>最后附上pro文件的配置文档：</p>
+<p><a href="http://doc.qt.nokia.com/4.6/qmake-variable-reference.html" target="_blank" rel="noopener">http://doc.qt.nokia.com/4.6/qmake-variable-reference.html</a></p>
+<p>当然如果要生成复杂的makefile文件还是要通过autoconf类似的工具：</p>
+<p><a href="http://www.chinaunix.net/jh/4/782832.html" target="_blank" rel="noopener">http://www.chinaunix.net/jh/4/782832.html</a></p>
+<p>&nbsp;</p>
+<p>虽然这篇文章内容比较简单，但是应该能给大家编写测试代码带来一些方便，所以就发到首页了，希望能给大家带来帮助。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2010/12/11/巧用qmake工具生成专业的makefile/" data-id="cjson4wr80009t2zshtxtfxwz" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2010/12/13/Beating-the-Average-为什么要学习Lisp-转/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Beating the Average------为什么要学习Lisp[转]
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2010/10/10/QT中拖拽的实现（附示例代码）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">QT中拖拽的实现（附示例代码）</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list"></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/08/">八月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2011/01/">一月 2011</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/12/">十二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/10/">十月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/08/">八月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/05/">五月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/04/">四月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/02/">二月 2010</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/10/">十月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/08/">八月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/03/">三月 2009</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2009/02/">二月 2009</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/02/16/浏览器扩展系列————透明浏览器窗口的实现/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/02/15/tutoial-of-hexo/">利用Hexo+Github搭建个人免费博客</a>
+          </li>
+        
+          <li>
+            <a href="/2016/05/30/QT项目性能调优小记/">QT项目性能调优小记</a>
+          </li>
+        
+          <li>
+            <a href="/2015/08/28/Windows下HG服务器的搭建/">Windows下HG服务器的搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2011/08/10/svn-tp-link-花生壳搭建外网服务器/">svn+tp-link+花生壳搭建外网服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 三闻鱼<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
