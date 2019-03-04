@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="Tiled 是一款地图编辑软件，它的网址是：http://www.mapeditor.org/（ 不过好像要用代理才能访问）。Wiki的网址是：http://sourceforge.net/apps/mediawiki/tiled/index.php?title=Main_Page。它的上一版是用Jave实现，有兴趣的也可以去看一下。 &amp;nbsp; Tiled现在包含的功能有： General p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tiled 地图编辑器分析（QT平台）">
+<meta property="og:url" content="http://yoursite.com/2010/08/21/Tiled-地图编辑器分析（QT平台）/index.html">
+<meta property="og:site_name" content="Submarine">
+<meta property="og:description" content="Tiled 是一款地图编辑软件，它的网址是：http://www.mapeditor.org/（ 不过好像要用代理才能访问）。Wiki的网址是：http://sourceforge.net/apps/mediawiki/tiled/index.php?title=Main_Page。它的上一版是用Jave实现，有兴趣的也可以去看一下。 &amp;nbsp; Tiled现在包含的功能有： General p">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_shotsnap_thumb.png">
+<meta property="og:image" content="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_view_struct_thumb.png">
+<meta property="og:image" content="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/TiledQT_EC02/Creek_thumb.jpg">
+<meta property="og:updated_time" content="2019-02-16T13:03:17.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tiled 地图编辑器分析（QT平台）">
+<meta name="twitter:description" content="Tiled 是一款地图编辑软件，它的网址是：http://www.mapeditor.org/（ 不过好像要用代理才能访问）。Wiki的网址是：http://sourceforge.net/apps/mediawiki/tiled/index.php?title=Main_Page。它的上一版是用Jave实现，有兴趣的也可以去看一下。 &amp;nbsp; Tiled现在包含的功能有： General p">
+<meta name="twitter:image" content="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_shotsnap_thumb.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2010/08/21/Tiled-地图编辑器分析（QT平台）/">
+
+
+
+
+
+  <title>Tiled 地图编辑器分析（QT平台） | Submarine</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Submarine</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">chinese submarine</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2010/08/21/Tiled-地图编辑器分析（QT平台）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="三闻鱼">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Submarine">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Tiled 地图编辑器分析（QT平台）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2010-08-21T09:16:00+08:00">
+                2010-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Tiled 是一款地图编辑软件，它的网址是：<a href="http://www.mapeditor.org/" target="_blank" rel="noopener">http://www.mapeditor.org/</a>（ 不过好像要用代理才能访问）。Wiki的网址是：<a href="http://sourceforge.net/apps/mediawiki/tiled/index.php?title=Main_Page" title="Main_Page" target="_blank" rel="noopener">http://sourceforge.net/apps/mediawiki/tiled/index.php?title=Main_Page</a>。它的上一版是用Jave实现，有兴趣的也可以去看一下。</p>
+<p>&nbsp;</p>
+<h2 id="Tiled现在包含的功能有："><a href="#Tiled现在包含的功能有：" class="headerlink" title="Tiled现在包含的功能有："></a>Tiled现在包含的功能有：</h2><ol>
+<li><strong><font color="#000080">General purpose tile map editor with XML-based map format</font></strong>  </li><li>Supports orthogonal and isometric maps  </li><li>Custom objects can be placed with pixel precision  </li><li><strong><font color="#000080">Full undo/redo and copy/paste support</font></strong>  </li><li>Add custom properties to tiles, layers, objects or the map  </li><li>Automatically reloads tilesets when changed externally  </li><li>Resize or offset your tile map later as needed  </li><li>Efficient tile editing tools like stamp and fill brushes  </li><li>Supports input/output plugins to open and save files in custom formats </li>
+</ol>
+<p>本文将重点描述Tiled的整体结构，以及1, 4功能的实现（本文分析的是它的0.1版）。</p>
+<p>&nbsp;</p>
+<h2 id="开发环境的搭建"><a href="#开发环境的搭建" class="headerlink" title="开发环境的搭建"></a>开发环境的搭建</h2><p>首先从<a href="http://sourceforge.net/projects/tiled/" target="_blank" rel="noopener">http://sourceforge.net/projects/tiled/</a> 上下载最新的源码。</p>
+<p>用<a href="http://qt.nokia.com/products/developer-tools" target="_blank" rel="noopener">Qt Creator</a>打开源码中的pro文件。</p>
+<p>下载zlib库，地址：<a href="http://www.zlib.net/" target="_blank" rel="noopener">http://www.zlib.net/</a>。</p>
+<p>打开src下面的<strong>src.pro</strong>, 加入对zlib的引用：</p>
+<blockquote>
+<p>INCLUDEPATH += “D:\Program Files\GnuWin32\include”  </p><p>LIBS += -L”D:\Program Files\GnuWin32\lib” \<br>&nbsp;&nbsp;&nbsp; -lzlib </p>
+</blockquote>
+<p>点击build，泡杯茶回来便可看到程序的运行画面了，如下所示：  </p><p><a href="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_shotsnap_2.png" target="_blank" rel="noopener"><img src="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_shotsnap_thumb.png" alt="tiled_shotsnap" title="tiled_shotsnap"></a>  </p><p><strong>Note：</strong>源代码所在文件夹的路径中不能出现中文，否则编译会出错。</p>
+<p>Tiled的使用说明可以参考如下两篇文章：</p>
+<p><a href="http://silveiraneto.net/2009/01/11/game-map-edition-using-tiled/" target="_blank" rel="noopener">http://silveiraneto.net/2009/01/11/game-map-edition-using-tiled/</a></p>
+<p><a href="http://www.raywenderlich.com/1163/how-to-make-a-tile-based-game-with-cocos2d" target="_blank" rel="noopener">http://www.raywenderlich.com/1163/how-to-make-a-tile-based-game-with-cocos2d</a></p>
+<p>&nbsp;</p>
+<h2 id="整体结构的介绍"><a href="#整体结构的介绍" class="headerlink" title="整体结构的介绍"></a>整体结构的介绍</h2><p>QT窗口的结构如下所示</p>
+<p><a href="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_view_struct_2.png" target="_blank" rel="noopener"><img src="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/Tiled_81F9/tiled_view_struct_thumb.png" alt="tiled_view_struct" title="tiled_view_struct"></a> </p>
+<p>先说左边三个窗口：</p>
+<p>层管理窗口：可以把层次分类进行管理，如建筑物和植物可以定义到不同的层次。</p>
+<p>历史管理窗口：可以查看和撤销之前的操作。</p>
+<p>色块管理窗口：显示外界导入的tileset，可以添加到客户区中。</p>
+<p>这三个窗口利用QT的QDockWidget实现，所以默认具有停靠，移动的功能。</p>
+<p>&nbsp;</p>
+<p>再说左边的客户区，可以编辑map，这块是利用QT的GraphicsView图形引擎完成的，关于GraphicsView的介绍可以参考：</p>
+<p><a href="http://doc.qt.nokia.com/4.6/graphicsview.html" target="_blank" rel="noopener">http://doc.qt.nokia.com/4.6/graphicsview.html</a>，对应到代码中就是MapView。</p>
+<p>&nbsp;</p>
+<p>下面看一下MainWindow类是如何管理这几个窗口的。</p>
+<p><a href="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/TiledQT_EC02/Creek_2.jpg" target="_blank" rel="noopener"><img src="http://images.cnblogs.com/cnblogs_com/chinese-zmm/WindowsLiveWriter/TiledQT_EC02/Creek_thumb.jpg" alt="Creek" title="Creek"></a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2010/05/29/从QDataStream向QByteArray中写入数据时的注意点（QT）/" rel="next" title="从QDataStream向QByteArray中写入数据时的注意点（QT）">
+                <i class="fa fa-chevron-left"></i> 从QDataStream向QByteArray中写入数据时的注意点（QT）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2010/10/10/QT中拖拽的实现（附示例代码）/" rel="prev" title="QT中拖拽的实现（附示例代码）">
+                QT中拖拽的实现（附示例代码） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="三闻鱼">
+          <p class="site-author-name" itemprop="name">三闻鱼</p>
+           
+              <p class="site-description motion-element" itemprop="description">record tech & life</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tiled现在包含的功能有："><span class="nav-number">1.</span> <span class="nav-text">Tiled现在包含的功能有：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发环境的搭建"><span class="nav-number">2.</span> <span class="nav-text">开发环境的搭建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#整体结构的介绍"><span class="nav-number">3.</span> <span class="nav-text">整体结构的介绍</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">三闻鱼</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+<div>
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+本站总访问量 <span id="busuanzi_value_site_pv"></span> 次&nbsp&nbsp&nbsp
+本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
