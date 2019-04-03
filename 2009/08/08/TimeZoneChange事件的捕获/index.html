@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="Submarine">
 <meta property="og:description" content="#需求：在c#中要捕获TimeZone变化的事件。  经过简单的分析发现，c#中没有直接捕获TimeZone Change的事件，但是通过google搜索时，发现一个SystemEvents类提供了许多系统属性变化的时间，其中有一个就是TimeChange事件。考虑到TimeZone带来的附加效果就是Time的变化，所以在此利用了TimeChange事件，来捕获TimeZoneChange事件，具">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-21T14:51:20.000Z">
+<meta property="og:updated_time" content="2019-04-03T13:08:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TimeZoneChange事件的捕获">
 <meta name="twitter:description" content="#需求：在c#中要捕获TimeZone变化的事件。  经过简单的分析发现，c#中没有直接捕获TimeZone Change的事件，但是通过google搜索时，发现一个SystemEvents类提供了许多系统属性变化的时间，其中有一个就是TimeChange事件。考虑到TimeZone带来的附加效果就是Time的变化，所以在此利用了TimeChange事件，来捕获TimeZoneChange事件，具">
@@ -342,6 +342,7 @@
       
         <p>#需求：<br>在c#中要捕获TimeZone变化的事件。 </p>
 <p>经过简单的分析发现，c#中没有直接捕获TimeZone Change的事件，但是通过google搜索时，发现一个SystemEvents类提供了许多系统属性变化的时间，其中有一个就是TimeChange事件。考虑到TimeZone带来的附加效果就是Time的变化，所以在此利用了TimeChange事件，来捕获TimeZoneChange事件，具体的代码如下： </p>
+ <a id="more"></a>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">sealed</span> <span class="keyword">class</span> <span class="title">TimeEvents</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> TimeZoneInfo PreviousTimeZone;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">event</span> EventHandler TimeZoneChangedEvent;</span><br><span class="line">     <span class="function"><span class="keyword">static</span> <span class="title">TimeEvents</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        PreviousTimeZone = TimeZoneInfo.Local;</span><br><span class="line">        Microsoft.Win32.SystemEvents.TimeChanged += OnTimeChanged;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnTimeChanged</span>(<span class="params"><span class="keyword">object</span> sender, EventArgs e</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        System.Globalization.CultureInfo.CurrentCulture.ClearCachedData();</span><br><span class="line">        TimeZoneInfo.ClearCachedData();</span><br><span class="line">        <span class="keyword">if</span> (TimeZoneInfo.Local != PreviousTimeZone)</span><br><span class="line">        &#123;</span><br><span class="line">            OnTimeZoneChanged();</span><br><span class="line">            PreviousTimeZone = TimeZoneInfo.Local;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">OnTimeZoneChanged</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> != TimeZoneChangedEvent)</span><br><span class="line">        &#123;</span><br><span class="line">            TimeZoneChangedEvent(<span class="keyword">new</span> TimeEvents(), EventArgs.Empty);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>#Remarks： </p>
 <p>由于TimeZoneInfo对象使用了缓存机制，即它会将获得的TimeZoneInfo缓存起来，在用户请求当前时区属性（Local）时，直接返回缓存的TimeZone，而不重新获取新的TimeZone，所以在获取新的TimeZone属性时，需要先清空Culture和TImeZone的缓存，如下所示： </p>
@@ -369,8 +370,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2009/03/02/浏览器扩展系列————给MSTHML添加内置脚本对象【包括自定义事件】/" rel="next" title="浏览器扩展系列————给MSTHML添加内置脚本对象【包括自定义事件】">
-                <i class="fa fa-chevron-left"></i> 浏览器扩展系列————给MSTHML添加内置脚本对象【包括自定义事件】
+              <a href="/2009/03/02/浏览器扩展系列————透明浏览器窗口的实现/" rel="next" title="透明浏览器窗口的实现">
+                <i class="fa fa-chevron-left"></i> 透明浏览器窗口的实现
               </a>
             
           </div>

@@ -101,7 +101,7 @@
 <meta property="og:site_name" content="Submarine">
 <meta property="og:description" content="最近的项目用到了QT 5.5，项目在运行过程中出现了一段时间CPU占用率持续25%，并频繁断网的情况，遂决定对项目性能进行优化。 优化工具也是VS2010自带的性能分析工具，具体的使用方法参见：http://www.cnblogs.com/smark/archive/2011/10/12/2208039.html 其中可以选择‘just my code’过滤出自己编写的代码。 通过性能分析工具可以">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-22T13:10:43.000Z">
+<meta property="og:updated_time" content="2019-04-03T13:09:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="QT项目性能调优小记">
 <meta name="twitter:description" content="最近的项目用到了QT 5.5，项目在运行过程中出现了一段时间CPU占用率持续25%，并频繁断网的情况，遂决定对项目性能进行优化。 优化工具也是VS2010自带的性能分析工具，具体的使用方法参见：http://www.cnblogs.com/smark/archive/2011/10/12/2208039.html 其中可以选择‘just my code’过滤出自己编写的代码。 通过性能分析工具可以">
@@ -344,6 +344,7 @@
 <p>优化工具也是VS2010自带的性能分析工具，具体的使用方法参见：<a href="http://www.cnblogs.com/smark/archive/2011/10/12/2208039.html" title="http://www.cnblogs.com/smark/archive/2011/10/12/2208039.html" target="_blank" rel="noopener">http://www.cnblogs.com/smark/archive/2011/10/12/2208039.html</a></p>
 <p>其中可以选择‘just my code’过滤出自己编写的代码。</p>
 <p>通过性能分析工具可以找到占用CPU时间较多的函数，然后按照占有时间多少进行优化&gt;再分析&gt;再优化的步骤，多次优化后，将CPU占用率降到了2%以下。下面将对性能优化提升较大的几个优化步骤进行记录： </p>
+ <a id="more"></a>
 <h3 id="1-优化字符串格式化方法。"><a href="#1-优化字符串格式化方法。" class="headerlink" title="1.优化字符串格式化方法。"></a>1.优化字符串格式化方法。</h3><p>项目中有将QByteArray中的二进制数如&rdquo;123&rdquo;格式化成&rdquo;31, 32, 33&rdquo;的功能，使用的代码如下：</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">QByteArray msg = xxx</span><br><span class="line"></span><br><span class="line">QString  str;</span><br><span class="line"></span><br><span class="line">foreach (quint8 b, msg)</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    str.append(QString().<span class="built_in">sprintf</span>(“%<span class="number">02</span>X”, b));</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当msg中包含6，7w个字符时，在lz酷睿2代i5的机器上，这段代码需要执行4到5s，因为其中的QString会调用new函数6，7w此，对性能影响极大。优化后的代码如下：</p>

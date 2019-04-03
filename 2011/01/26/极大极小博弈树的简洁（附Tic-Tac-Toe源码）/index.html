@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="#简介 极大极小博弈树(Minimax Game Tree)用于编写电脑之间的游戏程序，这类程序由两个游戏者轮流，每次执行一个步骤。当然，所有可能的步骤构成了一个树的结构。例如下面的图就是一个MGT，它表示了Tic-Tac-Toe游戏的前两步所有可能的步骤。  在每一层中的节点通常代表不同游戏者的选择，这两个游戏者通常被称作马克思（MAX）和米恩（Min）。 例如如果第二层是Max turn，则第">
+<meta name="description" content="#简介 极大极小博弈树(Minimax Game Tree)用于编写电脑之间的游戏程序，这类程序由两个游戏者轮流，每次执行一个步骤。当然，所有可能的步骤构成了一个树的结构。例如下面的图就是一个MGT，它表示了Tic-Tac-Toe游戏的前两步所有可能的步骤。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="极大极小博弈树的简介（附Tic-Tac-Toe源码）">
 <meta property="og:url" content="http://yoursite.com/2011/01/26/极大极小博弈树的简洁（附Tic-Tac-Toe源码）/index.html">
 <meta property="og:site_name" content="Submarine">
-<meta property="og:description" content="#简介 极大极小博弈树(Minimax Game Tree)用于编写电脑之间的游戏程序，这类程序由两个游戏者轮流，每次执行一个步骤。当然，所有可能的步骤构成了一个树的结构。例如下面的图就是一个MGT，它表示了Tic-Tac-Toe游戏的前两步所有可能的步骤。  在每一层中的节点通常代表不同游戏者的选择，这两个游戏者通常被称作马克思（MAX）和米恩（Min）。 例如如果第二层是Max turn，则第">
+<meta property="og:description" content="#简介 极大极小博弈树(Minimax Game Tree)用于编写电脑之间的游戏程序，这类程序由两个游戏者轮流，每次执行一个步骤。当然，所有可能的步骤构成了一个树的结构。例如下面的图就是一个MGT，它表示了Tic-Tac-Toe游戏的前两步所有可能的步骤。">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://www.aihorizon.com/images/essays/minimax-tictac.gif">
-<meta property="og:updated_time" content="2019-02-20T14:04:45.000Z">
+<meta property="og:updated_time" content="2019-04-03T13:08:42.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="极大极小博弈树的简介（附Tic-Tac-Toe源码）">
-<meta name="twitter:description" content="#简介 极大极小博弈树(Minimax Game Tree)用于编写电脑之间的游戏程序，这类程序由两个游戏者轮流，每次执行一个步骤。当然，所有可能的步骤构成了一个树的结构。例如下面的图就是一个MGT，它表示了Tic-Tac-Toe游戏的前两步所有可能的步骤。  在每一层中的节点通常代表不同游戏者的选择，这两个游戏者通常被称作马克思（MAX）和米恩（Min）。 例如如果第二层是Max turn，则第">
+<meta name="twitter:description" content="#简介 极大极小博弈树(Minimax Game Tree)用于编写电脑之间的游戏程序，这类程序由两个游戏者轮流，每次执行一个步骤。当然，所有可能的步骤构成了一个树的结构。例如下面的图就是一个MGT，它表示了Tic-Tac-Toe游戏的前两步所有可能的步骤。">
 <meta name="twitter:image" content="http://www.aihorizon.com/images/essays/minimax-tictac.gif">
 
 
@@ -344,6 +344,7 @@
       
         <p>#简介</p>
 <p>极大极小博弈树(<a href="http://en.wikipedia.org/wiki/Minimax" target="_blank" rel="noopener">Minimax Game Tree</a>)用于编写电脑之间的游戏程序，这类程序由两个游戏者轮流，每次执行一个步骤。当然，所有可能的步骤构成了一个树的结构。例如下面的图就是一个MGT，它表示了<a href="http://en.wikipedia.org/wiki/Tic-tac-toe" target="_blank" rel="noopener">Tic-Tac-Toe</a>游戏的前两步所有可能的步骤。</p>
+ <a id="more"></a>
 <p><img src="http://www.aihorizon.com/images/essays/minimax-tictac.gif" alt></p>
 <p>在每一层中的节点通常代表不同游戏者的选择，这两个游戏者通常被称作马克思（MAX）和米恩（Min）。</p>
 <p>例如如果第二层是Max turn，则第三层就是Min turn，第二层的每个节点就是Max的choice，它们之间是或的关系，第三层的每个节点就是Min的choice，它们之间是与的关系。根据这个树，Max要做出的选择就让下次Min做出的任意选择都最小，即Minimax这个词的含义，极小化对手的最大收益。所以它不同于<a href="http://en.wikipedia.org/wiki/Minimax#Maximin" target="_blank" rel="noopener">Maximin</a>最大化自己的收益。</p>

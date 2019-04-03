@@ -94,17 +94,17 @@
 
 
 
-<meta name="description" content="最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（http://en.wikipedia.org/wiki/Run-length_encoding）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。 &amp;">
+<meta name="description" content="最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（http://en.wikipedia.org/wiki/Run-length_encoding）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="程序优化小记">
 <meta property="og:url" content="http://yoursite.com/2011/01/19/程序优化小记/index.html">
 <meta property="og:site_name" content="Submarine">
-<meta property="og:description" content="最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（http://en.wikipedia.org/wiki/Run-length_encoding）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。 &amp;">
+<meta property="og:description" content="最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（http://en.wikipedia.org/wiki/Run-length_encoding）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-21T14:56:52.000Z">
+<meta property="og:updated_time" content="2019-04-03T13:08:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="程序优化小记">
-<meta name="twitter:description" content="最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（http://en.wikipedia.org/wiki/Run-length_encoding）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。 &amp;">
+<meta name="twitter:description" content="最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（http://en.wikipedia.org/wiki/Run-length_encoding）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。">
 
 
 
@@ -341,6 +341,7 @@
 
       
         <p>最近做给一块蓝牙芯片做了一个decode的功能，数据是用RLE（<a href="http://en.wikipedia.org/wiki/Run-length_encoding" title="http://en.wikipedia.org/wiki/Run-length_encoding" target="_blank" rel="noopener">http://en.wikipedia.org/wiki/Run-length_encoding</a>）流程算法压缩的。为什么选用RLE算法，因为蓝牙芯片自身memory的局限性，最大只能获得不到2K的内存，还是不连续，而解压出的数据有2K多，所以需要一种能够边解压边发送的算法，查看现在流行的几种算法：霍夫曼算法，RLE算法，查表算法。</p>
+ <a id="more"></a>
 <p>&nbsp;</p>
 <table cellspacing="0" cellpadding="2" width="400" border="0"><br><tbody><br><tr><br><td valign="top" width="100">&nbsp;</td><br><td valign="top" width="100">压缩率</td><br><td valign="top" width="100">实现复杂度</td><br><td valign="top" width="100">内存占用量</td><br></tr><br><tr><br><td valign="top" width="100">霍夫曼算法</td><br><td valign="top" width="100">小</td><br><td valign="top" width="100">中</td><br><td valign="top" width="100">中</td><br></tr><br><tr><br><td valign="top" width="100">RLE算法</td><br><td valign="top" width="100">中</td><br><td valign="top" width="100">小</td><br><td valign="top" width="100">小</td><br></tr><br><tr><br><td valign="top" width="100">查表算法</td><br><td valign="top" width="100">大</td><br><td valign="top" width="100">大</td><br><td valign="top" width="100">大（一般几十K）</td><br></tr><br></tbody><br></table>
 

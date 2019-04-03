@@ -94,17 +94,17 @@
 
 
 
-<meta name="description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。 QMutex类的功能比较简单，主要分为Rec">
+<meta name="description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="也谈线程同步变量">
 <meta property="og:url" content="http://yoursite.com/2010/04/08/也谈线程同步变量/index.html">
 <meta property="og:site_name" content="Submarine">
-<meta property="og:description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。 QMutex类的功能比较简单，主要分为Rec">
+<meta property="og:description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-21T15:03:18.000Z">
+<meta property="og:updated_time" content="2019-04-03T13:09:04.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="也谈线程同步变量">
-<meta name="twitter:description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。 QMutex类的功能比较简单，主要分为Rec">
+<meta name="twitter:description" content="前段时间看了一下QT中的线程同步变量，这里谈谈我的心得，由于线程同步变量在很多系统和平台中都有涉及，所以下文将更多地从它们的共性方面去讨论。废话少说，进入正文。 QT中主要提供了以下几个同步类： QMutex QSemaphore QWaitCondition QReadLocker QWriteLocker 等。 下面就主要探讨一下前三个同步类。">
 
 
 
@@ -348,6 +348,7 @@
 <p>QReadLocker</p>
 <p>QWriteLocker 等。</p>
 <p>下面就主要探讨一下前三个同步类。</p>
+ <a id="more"></a>
 <p><strong>QMutex类</strong>的功能比较简单，主要分为<strong>Recursive</strong>和<strong>N**</strong>on-Recursive**两种方式，Recursive模式即指在同一线程中可以对某个QMutex多次加锁，当然也要同等次数的解锁。而Non-Recursive即指QMutex只能被lock一次，否则视为死锁。下面重点介绍一下这两种模式的异同。</p>
 <p>　　在Recursive模式下需要记录第一次对其进行lock操作的线程id，即ownership（它的所属），如果是同一个线程，则对此Mutex再加一次锁，不会block当前的线程。如果是不同的线程，则需要block当前的线程，此外对该QMutex unlock的线程必须和lock的线程相同。</p>
 <p>　　在Non-Recursive模式下unlock的线程则不需要与lock的线程相同，在这点上有点类似于Semaphore。有的地方说Non-Recursive模式下的Mutex没有记录ownership，那么<em>我猜测<strong>Non-Recursive</strong>死锁的检测可能就是等待确定的时间，如果超过了该时间没有被解锁则判定为死锁，不知道这种猜测对不对，哪位知道的可以<strong>share</strong>一下</em>。通过查看QMutex的代码，发现QMutex版本的Mutex记录了线程的Ownership，所以在QMutex被二次加锁时能够立刻检查出死锁。</p>

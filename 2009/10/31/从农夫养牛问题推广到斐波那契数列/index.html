@@ -94,17 +94,17 @@
 
 
 
-<meta name="description" content="今天在CSDN上看到一条题目： 一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛……问农夫10年后有多少头牛?n年呢？ 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则 f(n) = f(n - 1) + f(n - 2)————&amp;gt;表达式1-1 即第n年的牛为去年牛的个数f(n - 1)加上今年出生牛的个数,那么">
+<meta name="description" content="今天在CSDN上看到一条题目： 一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛……问农夫10年后有多少头牛?n年呢？ 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则 f(n) = f(n - 1) + f(n - 2)————&amp;gt;表达式1-1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从农夫养牛问题推广到斐波那契数列">
 <meta property="og:url" content="http://yoursite.com/2009/10/31/从农夫养牛问题推广到斐波那契数列/index.html">
 <meta property="og:site_name" content="Submarine">
-<meta property="og:description" content="今天在CSDN上看到一条题目： 一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛……问农夫10年后有多少头牛?n年呢？ 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则 f(n) = f(n - 1) + f(n - 2)————&amp;gt;表达式1-1 即第n年的牛为去年牛的个数f(n - 1)加上今年出生牛的个数,那么">
+<meta property="og:description" content="今天在CSDN上看到一条题目： 一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛……问农夫10年后有多少头牛?n年呢？ 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则 f(n) = f(n - 1) + f(n - 2)————&amp;gt;表达式1-1">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-02-19T15:25:14.000Z">
+<meta property="og:updated_time" content="2019-04-03T13:08:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从农夫养牛问题推广到斐波那契数列">
-<meta name="twitter:description" content="今天在CSDN上看到一条题目： 一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛……问农夫10年后有多少头牛?n年呢？ 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则 f(n) = f(n - 1) + f(n - 2)————&amp;gt;表达式1-1 即第n年的牛为去年牛的个数f(n - 1)加上今年出生牛的个数,那么">
+<meta name="twitter:description" content="今天在CSDN上看到一条题目： 一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛……问农夫10年后有多少头牛?n年呢？ 这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则 f(n) = f(n - 1) + f(n - 2)————&amp;gt;表达式1-1">
 
 
 
@@ -344,6 +344,7 @@
 <p><em>一个农夫养了一头牛，三年后，这头牛每年会生出1头牛，生出来的牛三年后，又可以每年生出一头牛……问农夫10年后有多少头牛?n年呢？</em></p>
 <p>这里主要谈一下解决这种问题的思想。首先可以联系斐波那契数列，设f(n)为第n年的牛，则</p>
 <p>f(n) = f(n - 1) + f(n - 2)————&gt;表达式1-1</p>
+ <a id="more"></a>
 <p>即第n年的牛为去年牛的个数f(n - 1)加上今年出生牛的个数,那么今年有多少头牛能生呢？（不考虑死亡的牛）则为前年牛的个数即f(n - 2)，因为前年的牛今年至少3岁，即为表达式1-1。</p>
 <p>推广一下，将牛生育年龄设为m，那么计算的表达式就变为</p>
 <p>f(n) = f(n - 1) + f(n - m + 1)————&gt;表达式1-2</p>
